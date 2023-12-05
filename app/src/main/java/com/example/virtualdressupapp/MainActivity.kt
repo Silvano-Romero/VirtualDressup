@@ -6,6 +6,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 import com.myapp.firebase.UserDAO.writeDocumentToUsersCollection
+import com.myapp.firebase.UserDAO.printDocumentsFromCollection
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,6 +32,8 @@ class MainActivity : ComponentActivity() {
             writeDocumentToUsersCollection(collection, "Erwin", userErwin)
             writeDocumentToUsersCollection(collection, "Silvano", userSilvano)
             writeDocumentToUsersCollection(collection, "Gabriel", userGabriel)
+            printDocumentsFromCollection("Users")
+
         }
     }
 }
