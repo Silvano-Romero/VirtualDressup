@@ -1,39 +1,36 @@
 package com.example.virtualdressupapp
 
 import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
 import androidx.activity.ComponentActivity
+import com.myapp.firebase.UserDAO
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-import com.myapp.firebase.UserDAO.writeDocumentToUsersCollection
-import com.myapp.firebase.UserDAO.printDocumentsFromCollection
 
 class MainActivity : ComponentActivity() {
+    private val userDAO = UserDAO
+    private lateinit var editText: EditText
+    private lateinit var submitButton: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val userErwin = hashMapOf(
-            "name" to "Erwin",
-            "age" to 20,
-        )
+        setContentView(R.layout.activity_main)
 
-        val userSilvano = hashMapOf(
-            "name" to "Silvano",
-            "age" to 21,
-        )
+        editText = findViewById(R.id.editText)
+        submitButton = findViewById(R.id.submitButton)
 
-        val userGabriel = hashMapOf(
-            "name" to "Gabriel",
-            "age" to 22,
-        )
+        submitButton.setOnClickListener {
+            val inputData = editText.text.toString()
 
-        val collection = "Users"
-
-        GlobalScope.launch {
-            writeDocumentToUsersCollection(collection, "Erwin", userErwin)
-            writeDocumentToUsersCollection(collection, "Silvano", userSilvano)
-            writeDocumentToUsersCollection(collection, "Gabriel", userGabriel)
-            printDocumentsFromCollection("Users")
-
+            GlobalScope.launch {
+                // Assuming your collection is named "Users"
+                userDAO.writeDocumentToUsersCollection("Users", inputData, hashMapOf("Data:" to inputData))
+            }
+            // Clear the EditText after submitting
+            editText.text.clear()
         }
+        userDAO.printDocumentsFromCollection("Users")
     }
 }
+
