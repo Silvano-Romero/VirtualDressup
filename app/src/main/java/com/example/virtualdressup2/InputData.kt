@@ -1,21 +1,21 @@
-package com.example.virtualdressupapp
+package com.example.virtualdressup2
 
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
-import androidx.activity.ComponentActivity
-import com.myapp.firebase.UserDAO
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import myapp.firebase.UserDAO
 
-
-class MainActivity : ComponentActivity() {
-    private val userDAO = UserDAO()
+class InputData: AppCompatActivity() {
+    private val userDAO = UserDAO
     private lateinit var editText: EditText
     private lateinit var submitButton: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.input_data)
+
         editText = findViewById(R.id.editText)
         submitButton = findViewById(R.id.submitButton)
 
@@ -32,4 +32,3 @@ class MainActivity : ComponentActivity() {
         userDAO.printDocumentsFromCollection("Users")
     }
 }
-

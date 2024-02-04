@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">VirtualDressUpApp</string>
+    <string name="app_name">Virtual DressUp2</string>
+    <string name="white_logo" />
 </resources>

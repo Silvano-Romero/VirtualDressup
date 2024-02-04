@@ -13,6 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "VirtualDressUpApp"
+rootProject.name = "Virtual DressUp2"
 include(":app")
  

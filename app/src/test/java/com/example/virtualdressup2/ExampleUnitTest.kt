@@ -1,4 +1,4 @@
-package com.example.virtualdressupapp
+package com.example.virtualdressup2
 
 import org.junit.Test
 
