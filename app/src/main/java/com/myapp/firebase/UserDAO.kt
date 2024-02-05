@@ -1,20 +1,20 @@
-package myapp.firebase
+package com.myapp.firebase
 
 import android.content.ContentValues
 import android.util.Log
 
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.myapp.firebase.FirebaseConnection
 
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
-import myapp.firebase.FirebaseConnection.getDatabaseInstance
 
 /*
     User Data Access Object to write and delete from Users collection.
  */
-object UserDAO {
-    private var database: FirebaseFirestore = getDatabaseInstance()
+class UserDAO {
+    private var database: FirebaseFirestore = FirebaseConnection().getDatabaseInstance()
 
     suspend fun writeDocumentToUsersCollection(collection: String, document: String, data: Any) {
         // Replace document content
@@ -23,9 +23,9 @@ object UserDAO {
 
         // Create new document if it does not exist
         database.collection(collection).document(document)
-                .set(data)
-                .addOnSuccessListener { Log.d(ContentValues.TAG, "User Document Successfully Written!") }
-                .addOnFailureListener { e -> Log.w(ContentValues.TAG, "Error Writing Document", e) }
+            .set(data)
+            .addOnSuccessListener { Log.d(ContentValues.TAG, "User Document Successfully Written!") }
+            .addOnFailureListener { e -> Log.w(ContentValues.TAG, "Error Writing Document", e) }
     }
     suspend fun getAllDocumentsFromUsersCollection(collection: String): List<DocumentSnapshot> {
         return try {
@@ -33,6 +33,14 @@ object UserDAO {
             collectionRef.documents
         } catch (e: Exception) {
             emptyList()
+        }
+    }
+    suspend fun getUserFromUsersCollection(collection: String, userID: Int): Map<String, Any>? {
+        val userDocument = database.collection(collection).document(userID.toString()).get().await()
+        return if (userDocument.exists()) {
+            userDocument.data
+        } else {
+            null
         }
     }
 

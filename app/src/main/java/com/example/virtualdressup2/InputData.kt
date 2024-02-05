@@ -6,10 +6,10 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import myapp.firebase.UserDAO
+import com.myapp.firebase.UserDAO
 
 class InputData: AppCompatActivity() {
-    private val userDAO = UserDAO
+    private val userDAO = UserDAO()
     private lateinit var editText: EditText
     private lateinit var submitButton: Button
     override fun onCreate(savedInstanceState: Bundle?) {
