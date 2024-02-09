@@ -1,4 +1,9 @@
 <resources>
-    <string name="app_name">Virtual DressUp2</string>
+    <string name="app_name">Virtual Dress-Up</string>
     <string name="white_logo" />
+    <string name="not_registered_yet_sign_up">Sign Up</string>
+    <string name="username">Username</string>
+    <string name="user_icon">User icon</string>
+    <string name="back_button_icon" />
+    <string name="already_registered_sign_in">Already Registered , Sign In !</string>
 </resources>
