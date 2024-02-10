@@ -6,7 +6,7 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import com.myapp.firebase.UserDAO
+import com.myapp.firebase.users.UserDAO
 
 class InputData: AppCompatActivity() {
     private val userDAO = UserDAO()
@@ -24,7 +24,7 @@ class InputData: AppCompatActivity() {
 
             GlobalScope.launch {
                 // Assuming your collection is named "Users"
-                userDAO.writeDocumentToUsersCollection("Users", inputData, hashMapOf("Data:" to inputData))
+                userDAO.writeDocumentToCollection("Users", inputData, hashMapOf("Data:" to inputData))
             }
             // Clear the EditText after submitting
             editText.text.clear()

@@ -1,5 +1,5 @@
 package com.myapp.users
-import com.myapp.firebase.UserDAO
+import com.myapp.firebase.users.UserDAO
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -15,7 +15,7 @@ class User constructor(private var userID: Int, private var firstName: String, p
             "lastName" to lastName
         )
         GlobalScope.launch {
-            userDAO.writeDocumentToUsersCollection("Users", userID.toString(), userDocumentData)
+            userDAO.writeDocumentToCollection("Users", userID.toString(), userDocumentData)
         }
     }
 
