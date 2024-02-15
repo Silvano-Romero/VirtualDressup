@@ -41,7 +41,7 @@ class SignUpActivity : AppCompatActivity() {
             val confirmPasswordText = confirmPasswordEditText.text.toString()
 
             // Create account and user for new member. Update database.
-            var user = User(2, firstNameText, lastNameText)
+            var user = User(firstNameText, lastNameText)
             var account = Account(user, emailText, passwordText)
             user.addUserToDatabase()
             account.addAccountToDatabase()

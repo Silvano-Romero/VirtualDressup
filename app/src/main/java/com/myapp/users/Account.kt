@@ -3,6 +3,7 @@ import com.myapp.firebase.users.AccountDAO
 import com.myapp.firebase.users.UserDAO
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 class Account constructor(private var user: User, private var email: String, private var password: String){
     private var accountNumber = user.getUserID()
@@ -22,8 +23,8 @@ class Account constructor(private var user: User, private var email: String, pri
         }
     }
 
-    fun getAccountNumber(): Int { return this.accountNumber }
-    fun getUserID(): Int { return this.user.getUserID() }
+    fun getAccountNumber(): String { return this.accountNumber }
+    fun getUserID(): String { return this.user.getUserID() }
     fun getEmail(): String { return this.email }
     fun getPassword(): String { return this.password }
     fun setNewPassword(newPassword: String){
