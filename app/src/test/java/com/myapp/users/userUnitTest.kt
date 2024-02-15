@@ -7,7 +7,7 @@ class UserUnitTest {
     fun validateUserAttributesTest(){
         val dummyUser1 = User(-1, "TestUserFirstName", "TestUserLastName")
         assert(dummyUser1.getUserID() == -1)
-        assert(dummyUser1.getFirstName() == "TestUserFirstName")
+        assert(dummyUsdummyUser1er1.getFirstName() == "TestUserFirstName")
         assert(dummyUser1.getLastName() == "TestUserLastName")
     }
 }
