@@ -1,56 +1,61 @@
 package com.example.virtualdressup2
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.example.virtualdressup2.databinding.ActivitySignUpBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.myapp.users.Account
 import com.myapp.users.User
 
 class SignUpActivity : AppCompatActivity() {
-    private lateinit var firstNameEditText: EditText
-    private lateinit var lastNameEditText: EditText
-    private lateinit var emailEditText: EditText
-    private lateinit var passwordEditText: EditText
-    private lateinit var confirmPasswordEditText: EditText
-    private lateinit var signUpButton: Button
-    private lateinit var signInRedirectTextView: TextView
+
+    private lateinit var binding: ActivitySignUpBinding
+    private lateinit var firebaseAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sign_up)
 
-        // Initialize views
-        firstNameEditText = findViewById(R.id.firstNameEt)
-        lastNameEditText = findViewById(R.id.lastNameEt)
-        emailEditText = findViewById(R.id.emailEt)
-        passwordEditText = findViewById(R.id.passET)
-        confirmPasswordEditText = findViewById(R.id.confirmPassEt)
-        signUpButton = findViewById(R.id.sign_up_button)
-        signInRedirectTextView = findViewById(R.id.sign_in_redirect)
+        binding = ActivitySignUpBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        // Set click listener for sign up button
-        signUpButton.setOnClickListener {
-            val firstNameText = firstNameEditText.text.toString()
-            val lastNameText = lastNameEditText.text.toString()
-            val emailText = emailEditText.text.toString()
-            val passwordText = passwordEditText.text.toString()
-            val confirmPasswordText = confirmPasswordEditText.text.toString()
+        firebaseAuth = FirebaseAuth.getInstance()
 
-            // Create account and user for new member. Update database.
-            var user = User(firstNameText, lastNameText)
-            var account = Account(user, emailText, passwordText)
-            user.addUserToDatabase()
-            account.addAccountToDatabase()
-        }
-
-        // Set click listener for sign in redirect text view
-        signInRedirectTextView.setOnClickListener {
+        binding.signInRedirect.setOnClickListener {
             val intent = Intent(this, SignInActivity::class.java)
             startActivity(intent)
+        }
+        binding.signUpButton.setOnClickListener {
+            val email = binding.emailEt.text.toString()
+            val pass = binding.passET.text.toString()
+            val confirmPass = binding.confirmPassEt.text.toString()
+            val firstNameText = binding.firstNameEt.text.toString()
+            val lastNameText = binding.lastNameEt.text.toString()
+
+            if (email.isNotEmpty() && pass.isNotEmpty() && confirmPass.isNotEmpty()) {
+                if (pass == confirmPass) {
+                    firebaseAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener { signUpTask ->
+                        if (signUpTask.isSuccessful) {
+                            val firebaseUser = firebaseAuth.currentUser
+                            val user = User(firstNameText, lastNameText, firebaseUser?.uid ?: "")
+                            val account = Account(user, email, pass)
+                            user.addUserToDatabase() // This will use Firebase auto-generated user ID
+                            account.addAccountToDatabase()
+                            Toast.makeText(this, "Sign up successful", Toast.LENGTH_SHORT).show()
+                            firebaseAuth.signOut()
+                            val intent = Intent(this, SignInActivity::class.java)
+                            startActivity(intent)
+                        } else {
+                            Toast.makeText(this, signUpTask.exception?.message, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                } else {
+                    Toast.makeText(this, "Password is not matching", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(this, "Empty Fields Are not Allowed !!", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }
