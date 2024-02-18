@@ -2,46 +2,58 @@ package com.example.virtualdressup2
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.virtualdressup2.databinding.ActivitySignInBinding
+import com.google.firebase.auth.FirebaseAuth
+
 
 class SignInActivity : AppCompatActivity() {
 
-    private lateinit var usernameInput: EditText
-    private lateinit var passwordInput: EditText
-    private lateinit var loginButton: Button
-    private lateinit var signUpButton: TextView
+    private lateinit var binding: ActivitySignInBinding
+    private lateinit var firebaseAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sign_in)
+        binding = ActivitySignInBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        // Initialize views
-        usernameInput = findViewById(R.id.username_input)
-        passwordInput = findViewById(R.id.password_input)
-        loginButton = findViewById(R.id.login_button)
-        signUpButton = findViewById(R.id.sign_up_button)
-
-        // Set click listener for sign up button
-        signUpButton.setOnClickListener {
+        firebaseAuth = FirebaseAuth.getInstance()
+        binding.signUpButton.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
         }
 
-        // Set click listener for login button
-        loginButton.setOnClickListener {
-            val email = usernameInput.text.toString()
-            val pass = passwordInput.text.toString()
+        binding.loginButton.setOnClickListener {
+            val email = binding.usernameInput.text.toString()
+            val pass = binding.passwordInput.text.toString()
 
             if (email.isNotEmpty() && pass.isNotEmpty()) {
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
+                // Check if the email and password match the sign-up data
+                firebaseAuth.signInWithEmailAndPassword(email, pass)
+                    .addOnCompleteListener { signInTask ->
+                        if (signInTask.isSuccessful) {
+                            // Sign-in successful, navigate to MainActivity
+                            val intent = Intent(this, MainActivity::class.java)
+                            startActivity(intent)
+                        } else {
+                            // Sign-in failed, display error message
+                            Toast.makeText(this, "Invalid email or password", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    }
             } else {
                 Toast.makeText(this, "Empty Fields Are not Allowed !!", Toast.LENGTH_SHORT).show()
             }
         }
     }
+
+//    override fun onStart() {
+//        super.onStart()
+//
+//        if(firebaseAuth.currentUser != null){
+//            val intent = Intent(this, MainActivity::class.java)
+//            startActivity(intent)
+//        }
+//    }
 }

@@ -3,11 +3,12 @@ package com.myapp.users
 import com.myapp.firebase.users.UserDAO
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.util.UUID
 
-class User constructor(private var firstName: String, private var lastName: String) {
-    private val userID: String = generateShortUUID()
-
+class User constructor(
+    private var firstName: String,
+    private var lastName: String,
+    private var userID: String // Parameter to store the user ID
+) {
     init {
         print("User has been created!")
     }
@@ -31,10 +32,5 @@ class User constructor(private var firstName: String, private var lastName: Stri
     }
     fun setLastName(newLastName: String) {
         this.lastName = newLastName
-    }
-
-    private fun generateShortUUID(): String {
-        val uuid = UUID.randomUUID().toString()
-        return uuid.substring(0, 8) // Take the first 8 characters of the UUID string
     }
 }
