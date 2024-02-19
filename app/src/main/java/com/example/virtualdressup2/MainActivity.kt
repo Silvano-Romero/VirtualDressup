@@ -2,11 +2,9 @@
 package com.example.virtualdressup2
 
 // Importing necessary classes and packages
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import androidx.fragment.app.Fragment
 import com.example.virtualdressup2.databinding.ActivityMainBinding
 //import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
@@ -14,16 +12,34 @@ import com.google.firebase.auth.FirebaseAuth
 // Declaration of the MainActivity class which extends AppCompatActivity
 class MainActivity : AppCompatActivity() {
     // Overriding the onCreate method to initialize the activity
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
-        supportActionBar?.hide()
+private lateinit var binding: ActivityMainBinding
+override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    binding = ActivityMainBinding.inflate(layoutInflater)
 
-        Handler(Looper.getMainLooper()).postDelayed({
-            val intent = Intent(this, SignInActivity::class.java)
-            startActivity(intent)
-            finish()
-        }, 3000)
+    setContentView(binding.root)
+    replaceFragment(HomeFragment())
+
+    binding.bottomNavigationView.setOnItemSelectedListener {
+        when(it.itemId) {
+            R.id.home -> replaceFragment(HomeFragment())
+            R.id.profile -> replaceFragment(SettingsFragment())
+
+            else -> {
+
+            }
+        }
+
+        true
     }
+}
+
+private fun replaceFragment(fragment: Fragment){
+    val fragmentManager = supportFragmentManager
+    val fragmentTransaction = fragmentManager.beginTransaction()
+
+    fragmentTransaction.replace(R.id.frame_layout,fragment)
+    fragmentTransaction.commit()
+}
 }

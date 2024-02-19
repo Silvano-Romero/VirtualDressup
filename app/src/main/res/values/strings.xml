@@ -6,4 +6,7 @@
     <string name="user_icon">User icon</string>
     <string name="back_button_icon" />
     <string name="already_registered_sign_in">Already Registered , Sign In !</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="home" />
+    <string name="profile" />
 </resources>
