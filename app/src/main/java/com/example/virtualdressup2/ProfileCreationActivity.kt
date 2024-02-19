@@ -1,40 +1,54 @@
 package com.example.virtualdressup2
-import android.content.Intent
+
 import android.os.Bundle
-import android.view.View
+import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.myapp.users.Account
-import com.myapp.firebase.users.AccountDAO
-import com.myapp.users.User
+import com.myapp.firebase.users.UserDAO
 
 class ProfileCreationActivity : AppCompatActivity() {
 
-    private lateinit var emailEditText: EditText
-    private lateinit var user: User
-    private lateinit var account: Account
+    private lateinit var nameEditText: EditText
+    private lateinit var ageEditText: EditText
+    private lateinit var createProfileButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.profile_creation)
 
-        emailEditText = findViewById(R.id.email_edittext)
+        nameEditText = findViewById(R.id.editTextName)
+        ageEditText = findViewById(R.id.editTextAge)
+        createProfileButton = findViewById(R.id.buttonCreateProfile)
 
-        // Get the user object from the intent or any other source
-        user = intent.getSerializableExtra("user") as User
+        createProfileButton.setOnClickListener {
+            val name = nameEditText.text.toString()
+            val age = ageEditText.text.toString().toIntOrNull()
+
+            if (name.isNotEmpty() && age != null) {
+                // Save profile data to Firebase or perform any required action
+                saveProfileToDatabase(name, age)
+            } else {
+                // Display error message if fields are empty or age is not valid
+                // You can customize this based on your app's requirements
+                // For simplicity, a toast message is shown here
+                showToast("Please enter valid name and age")
+            }
+        }
     }
 
-    fun createProfile(view: View) {
-        val email = emailEditText.text.toString()
+    private fun saveProfileToDatabase(name: String, age: Int) {
+        // Here you would save the profile data to your Firebase database using your UserDAO or any other method
+        // For demonstration purposes, we'll just show a toast message
+        showToast("Profile created successfully!")
+        // You can also navigate back to previous activity or perform any other action here
+        // For example:
+        // onBackPressed()
+        // finish()
+    }
 
-        // Get the user ID from the user object
-        val userID = user.getUserID()
-        val password = account.getPassword()
-
-        // Create an Account object and save it to the database
-        val account = Account(user, email, password) // Pass the user object
-        account.addAccountToDatabase()
-
-        // You may also add additional logic here, such as navigating to another activity
+    private fun showToast(message: String) {
+        // Utility function to display toast messages
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }
