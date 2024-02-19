@@ -37,11 +37,10 @@ class ProfileSelectionActivity : AppCompatActivity() {
             val intent = Intent(this, ProfileCreationActivity::class.java)
             startActivity(intent)
             finish()
-           // val intent = Intent(this@ProfileSelectionActivity, ProfileCreationActivity::class.java)
-           // startActivity(intent)
         }
     }
 
+    // Function to retrieve profiles from database
     private fun fetchProfiles() {
         GlobalScope.launch(Dispatchers.Main) {
             val userDAO = UserDAO()
