@@ -26,6 +26,12 @@
             android:name=".MainActivity"
             android:exported="false" />
         <activity
+            android:name=".ProfileSelectionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProfileCreationActivity"
+            android:exported="false" />
+        <activity
             android:name=".SplashScreen"
             android:exported="true">
             <intent-filter>

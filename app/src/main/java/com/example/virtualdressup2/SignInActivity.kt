@@ -47,7 +47,7 @@ class SignInActivity : AppCompatActivity() {
                         if (signInTask.isSuccessful) {
                             // Sign-in successful, navigate to MainActivity
                             Toast.makeText(this, "Successful Sign In!", Toast.LENGTH_SHORT).show()
-                            val intent = Intent(this, AvatarCreationActivity::class.java)
+                            val intent = Intent(this, ProfileSelectionActivity::class.java)
                             startActivity(intent)
                             finish()
                         } else {

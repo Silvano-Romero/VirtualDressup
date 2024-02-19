@@ -1,6 +1,8 @@
 package com.example.virtualdressup2
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,6 +29,17 @@ class ProfileSelectionActivity : AppCompatActivity() {
 
         // Fetch and display profiles
         fetchProfiles()
+
+        // Set click listener for "Create New Profile" button
+        val createProfileButton: Button = findViewById(R.id.createNewProfileButton)
+        createProfileButton.setOnClickListener {
+            // Start ProfileCreationActivity
+            val intent = Intent(this, ProfileCreationActivity::class.java)
+            startActivity(intent)
+            finish()
+           // val intent = Intent(this@ProfileSelectionActivity, ProfileCreationActivity::class.java)
+           // startActivity(intent)
+        }
     }
 
     private fun fetchProfiles() {
