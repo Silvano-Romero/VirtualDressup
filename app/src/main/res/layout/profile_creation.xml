@@ -1,30 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".ProfileCreationActivity">
 
     <EditText
-        android:id="@+id/editTextName"
+        android:id="@+id/firstNameLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter Name"
-        android:layout_margin="16dp"/>
-
-    <EditText
-        android:id="@+id/editTextAge"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Enter Age"
-        android:layout_below="@id/editTextName"
-        android:layout_margin="16dp"/>
+        android:hint="First Name"
+        android:inputType="text" />
 
     <Button
-        android:id="@+id/buttonCreateProfile"
+        android:id="@+id/createProfileButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Create Profile"
-        android:layout_below="@id/editTextAge"
+        android:layout_below="@id/firstNameLayout"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="24dp"/>
+        android:layout_marginTop="16dp"
+        android:text="Create Profile" />
 
 </RelativeLayout>
