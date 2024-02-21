@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+
     <FrameLayout
         android:id="@+id/frame_layout"
         android:layout_width="0dp"
@@ -13,10 +14,67 @@
         android:background="@color/app_background_color"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintVertical_bias="1.0">
+
+        <ImageView
+            android:id="@+id/gallery_button"
+            android:layout_width="165dp"
+            android:layout_height="147dp"
+            android:scaleType="fitCenter"
+            android:translationX="130dp"
+            android:translationY="20dp"
+            app:srcCompat="@drawable/closet_icon" />
+
+        <TextView
+            android:id="@+id/gallery_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gallery"
+            android:translationX="175dp"
+            android:translationY="180dp"
+            android:textSize="25sp"
+            android:textColor="@color/white" />
+
+        <ImageView
+            android:id="@+id/outfit_button"
+            android:layout_width="165dp"
+            android:layout_height="147dp"
+            android:scaleType="fitCenter"
+            android:translationX="130dp"
+            android:translationY="240dp"
+            app:srcCompat="@drawable/outfit_icon" />
+
+        <TextView
+            android:id="@+id/outfit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Outfit"
+            android:translationX="155dp"
+            android:translationY="400dp"
+            android:textSize="25sp"
+            android:textColor="@color/white" />
+
+        <ImageView
+            android:id="@+id/calendar_button"
+            android:layout_width="165dp"
+            android:layout_height="147dp"
+            android:scaleType="fitCenter"
+            android:translationX="130dp"
+            android:translationY="460dp"
+            app:srcCompat="@drawable/calendar_icon" />
+
+        <TextView
+            android:id="@+id/calendar_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Calendar"
+            android:translationX="165dp"
+            android:translationY="610dp"
+            android:textSize="25sp"
+            android:textColor="@color/white" />
 
     </FrameLayout>
 
