@@ -4,41 +4,64 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.RadioButton
-import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.virtualdressup2.databinding.FragmentCalendarDialogBinding
 
 class CalendarDialogFragment : DialogFragment() {
+    private var _binding: FragmentCalendarDialogBinding? = null
+    private val binding get() = _binding!!
+
+    private val outfitList = arrayListOf(
+        RecyclerItem(R.drawable.outfit1, "Outfit 1"),
+        RecyclerItem(R.drawable.outfit2, "Outfit 2"),
+        RecyclerItem(R.drawable.outfit3, "Outfit 3")
+    )
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val rootView: View = inflater.inflate(R.layout.fragment_calendar_dialog, container, false)
+        _binding = FragmentCalendarDialogBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        val cancelButton: Button = rootView.findViewById(R.id.cancelButton)
-        val submitButton: Button = rootView.findViewById(R.id.submitButton)
-        val radioGroup: RadioGroup = rootView.findViewById(R.id.radioGroup)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        cancelButton.setOnClickListener {
+        binding.cancelButton.setOnClickListener {
             dismiss()
         }
 
-        submitButton.setOnClickListener {
-            val selectedID = radioGroup.checkedRadioButtonId
-            if (selectedID != -1) {
-                val radio: RadioButton = rootView.findViewById(selectedID)
-                val selectResult = radio.text.toString()
-                Toast.makeText(context, "You selected: $selectResult", Toast.LENGTH_LONG).show()
+        binding.submitButton.setOnClickListener {
+            val selectedOutfit = getSelectedOutfit()
+            if (selectedOutfit != null) {
+                Toast.makeText(context, "Selected outfit: ${selectedOutfit.heading}", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(context, "Please select an outfit", Toast.LENGTH_SHORT).show()
             }
-            dismiss()
         }
 
-        return rootView
+        binding.outfitRecyclerView.layoutManager = LinearLayoutManager(context)
+        val adapter = OutfitAdapter(outfitList) { onItemClick(it) }
+        binding.outfitRecyclerView.adapter = adapter
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    private fun onItemClick(position: RecyclerItem) {
+        // Handle item click here
+    }
+
+    private fun getSelectedOutfit(): RecyclerItem? {
+        val selectedPosition = (binding.outfitRecyclerView.layoutManager as LinearLayoutManager)
+            .findFirstVisibleItemPosition()
+        return outfitList.getOrNull(selectedPosition)
+    }
 }
+
