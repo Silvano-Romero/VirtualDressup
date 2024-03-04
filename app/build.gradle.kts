@@ -41,6 +41,12 @@ android {
 
 dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation ("com.google.code.gson:gson:2.8.8")
+    implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-firestore-ktx")

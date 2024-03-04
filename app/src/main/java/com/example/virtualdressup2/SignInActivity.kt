@@ -9,6 +9,18 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.virtualdressup2.databinding.ActivitySignInBinding
 import com.google.firebase.auth.FirebaseAuth
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import com.myapp.revery.ReveryAIClient
+
+fun getGarments(){
+    GlobalScope.launch(Dispatchers.IO) {
+        val reveryClient = ReveryAIClient()
+        reveryClient.getFilteredGarments()
+    }
+}
+
 // Declaration of the SignInActivity class which extends AppCompatActivity
 class SignInActivity : AppCompatActivity() {
 
@@ -19,6 +31,10 @@ class SignInActivity : AppCompatActivity() {
     // Overriding the onCreate method to initialize the activity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Get filtered garments at once SignIn page is rendered. This can be removed only here
+        // for test purposes and demo.
+        getGarments()
+
         // Inflating the layout using view binding
         binding = ActivitySignInBinding.inflate(layoutInflater)
         setContentView(binding.root)
