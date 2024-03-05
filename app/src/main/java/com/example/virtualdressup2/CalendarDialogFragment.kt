@@ -16,7 +16,10 @@ class CalendarDialogFragment : DialogFragment() {
     private val outfitList = arrayListOf(
         RecyclerItem(R.drawable.outfit1, "Outfit 1"),
         RecyclerItem(R.drawable.outfit2, "Outfit 2"),
-        RecyclerItem(R.drawable.outfit3, "Outfit 3")
+        RecyclerItem(R.drawable.outfit3, "Outfit 3"),
+        RecyclerItem(R.drawable.outfit4, "Outfit 4"),
+        RecyclerItem(R.drawable.outfit5, "Outfit 5"),
+        RecyclerItem(R.drawable.outfit6, "Outfit 6")
     )
 
     override fun onCreateView(
