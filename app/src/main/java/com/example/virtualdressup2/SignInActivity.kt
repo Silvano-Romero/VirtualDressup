@@ -8,16 +8,39 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.virtualdressup2.databinding.ActivitySignInBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.myapp.revery.GarmentToDelete
+import com.myapp.revery.GarmentToUpload
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import com.myapp.revery.ReveryAIClient
+import com.myapp.revery.ReveryAIConstants
 
 fun getGarments(){
     GlobalScope.launch(Dispatchers.IO) {
         val reveryClient = ReveryAIClient()
         reveryClient.getFilteredGarments()
+        reveryClient.getModels(ReveryAIConstants.FEMALE)
+        reveryClient.getModels(ReveryAIConstants.MALE)
+//        val deletedGarmentId = reveryClient.garmentToDelete(
+//            GarmentToDelete(
+//                garment_id = "7047a79ff16b3393b5b2ff4d35ac8b8e_YfkM51ZFfOwB"
+//            )
+//        )
+//        println("GARMENT_ID" + deletedGarmentId)
+//        reveryClient.getFilteredGarments()
+//        reveryClient.getSpecificGarment("7047a79ff16b3393b5b2ff4d35ac8b8e_YfkM51ZFfOwB")
+//        val garmentID = reveryClient.uploadGarment(
+//            GarmentToUpload(
+//                category = ReveryAIConstants.BOTTOMS,
+//                gender = ReveryAIConstants.FEMALE,
+//                garment_img_url = "https://revery-integration-tools.s3.us-east-2.amazonaws.com/API_website/bottoms.jpeg",
+//                bottoms_sub_category =  ReveryAIConstants.PANTS,
+//            )
+//        )
+//        reveryClient.getSpecificGarment(garmentID)
+//        println("GARMENT_ID" + garmentID)
     }
 }
 

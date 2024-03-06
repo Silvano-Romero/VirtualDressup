@@ -6,13 +6,11 @@ import kotlinx.serialization.Serializable
 // their respective data class types.
 @Serializable
 data class FilteredGarmentsResponse(
-    val garments: List<String>,
+    val garments: List<Garment>,
     @SerialName("total_page")
     val totalPage: Int,
     val success: Boolean
-){
-    constructor() : this(emptyList(), 0, false)
-}
+){ constructor() : this(emptyList(), 0, false) }
 @Serializable
 data class Garment(
     val gender: String,
@@ -20,16 +18,12 @@ data class Garment(
     @SerialName("image_urls")
     val imageUrls: ImageUrls,
     val tryon: TryOn
-){
-    constructor() : this("", "", ImageUrls(), TryOn())
-}
+){ constructor() : this("", "", ImageUrls(), TryOn()) }
 @Serializable
 data class ImageUrls(
     @SerialName("product_image")
     val productImage: String
-){
-    constructor() : this("")
-}
+){ constructor() : this("") }
 @Serializable
 data class TryOn(
     val category: String,
@@ -37,6 +31,19 @@ data class TryOn(
     val bottomsSubCategory: String?, // Optional field
     @SerialName("open_outerwear")
     val openOuterwear: Boolean
-){
-    constructor() : this("", "",false)
-}
+){ constructor() : this("", "",false) }
+data class GarmentToUpload(
+    val category: String,
+    val bottoms_sub_category: String? = null,
+    val gender: String,
+    val garment_img_url: String,
+    val brand: String? = null,
+    val url: String? = null
+)
+data class GarmentToDelete(
+    val garment_id: String
+)
+@Serializable
+data class Models(
+    val model_ids: List<String>
+){ constructor() : this(emptyList()) }

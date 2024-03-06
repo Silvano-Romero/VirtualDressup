@@ -1,18 +1,40 @@
 package com.myapp.revery
 import com.google.gson.JsonElement
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Headers
+import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Query
+import retrofit2.http.QueryMap
 
 // Interface that defines how Retrofit talks to Revery server using HTTP requests.
 interface ReveryAIService {
     @GET("get_filtered_garments")
     suspend fun getFilteredGarments(@Header("public_key") publicKey: String,
                                     @Header("one_time_code") oneTimeCode: String,
-                                    @Header("timestamp") timeStamp: String): Response<JsonElement>
+                                    @Header("timestamp") timeStamp: String,
+                                    @QueryMap queryParams: Map<String, String>): Response<JsonElement>
     @GET("get_garment")
     suspend fun getSpecificGarment(@Header("public_key") publicKey: String,
-                                    @Header("one_time_code") oneTimeCode: String,
-                                    @Header("timestamp") timeStamp: String): Response<JsonElement>
+                                   @Header("one_time_code") oneTimeCode: String,
+                                   @Header("timestamp") timeStamp: String,
+                                   @Query("garment_id") garmentId: String): Response<JsonElement>
+    @POST("process_new_garment")
+    suspend fun uploadSpecificGarment(@Header("public_key") publicKey: String,
+                                      @Header("one_time_code") oneTimeCode: String,
+                                      @Header("timestamp") timeStamp: String,
+                                      @Body request: GarmentToUpload): Response<JsonElement>
+    @PUT("delete_garment")
+    suspend fun deleteGarment(@Header("public_key") publicKey: String,
+                              @Header("one_time_code") oneTimeCode: String,
+                              @Header("timestamp") timeStamp: String,
+                              @Body request: GarmentToDelete): Response<JsonElement>
+    @GET("get_selected_models")
+    suspend fun getModelsList(@Header("public_key") publicKey: String,
+                              @Header("one_time_code") oneTimeCode: String,
+                              @Header("timestamp") timeStamp: String,
+                              @Query("gender") gender: String ): Response<JsonElement>
 }
