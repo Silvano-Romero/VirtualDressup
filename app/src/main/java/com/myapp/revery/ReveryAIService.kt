@@ -37,4 +37,17 @@ interface ReveryAIService {
                               @Header("one_time_code") oneTimeCode: String,
                               @Header("timestamp") timeStamp: String,
                               @Query("gender") gender: String ): Response<JsonElement>
+
+
+    @PUT("delete_model")
+    suspend fun deleteModel(@Header("public_key") publicKey: String,
+                            @Header("one_time_code") oneTimeCode: String,
+                            @Header("timestamp") timeStamp: String,
+                            @Body request: GarmentToDelete): Response<JsonElement>
+
+    @POST("request_tryon")
+    suspend fun requestTryOn(@Header("public_key") publicKey: String,
+                             @Header("one_time_code") oneTimeCode: String,
+                             @Header("timestamp") timeStamp: String,
+                             @Body request: TryOnRequest): Response<JsonElement>
 }

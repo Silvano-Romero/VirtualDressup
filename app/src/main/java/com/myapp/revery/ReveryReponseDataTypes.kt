@@ -47,3 +47,44 @@ data class GarmentToDelete(
 data class Models(
     val model_ids: List<String>
 ){ constructor() : this(emptyList()) }
+
+// Represents a request to delete a model
+data class ModelToDelete(
+    val model_id: String
+)
+
+// Represents a request to try on a garment
+/*@Serializable
+data class TryOnRequest(
+    val garment_id: String,
+    val model_id: String,
+    val fitting_room_id: String
+)
+
+ */
+
+// Data class representing the request body for the Try-on request
+data class TryOnRequest(
+    val garments: Map<String, String>,
+    val modelId: String,
+    val shoesId: String?,
+    val background: String,
+    val tuckIn: Boolean
+)
+
+// Data class representing the response from the Try-on request
+data class TryOnResponse(
+    val modelMetadata: ModelMetadata,
+    val success: Boolean
+)
+{ constructor() : this(ModelMetadata(), false) }
+
+// Data class representing the model metadata in the Try-on response
+data class ModelMetadata(
+    val gender: String,
+    val modelFile: String,
+    val modelId: String,
+    val shoesId: String?,
+    val version: String
+)
+{ constructor() : this("", "", "", null, "") }

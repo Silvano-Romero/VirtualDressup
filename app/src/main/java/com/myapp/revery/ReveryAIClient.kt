@@ -317,4 +317,65 @@ class ReveryAIClient {
 
         return Models()
     }
+
+
+    suspend fun deleteModel(modelId: String): String {
+        var modelIdToDelete = ""
+
+        try {
+            // Create GarmentToDelete object using modelId
+            val garmentToDelete = GarmentToDelete(modelId)
+
+            // Make request to delete_model endpoint.
+            val response = api.deleteModel(publicKey, oneTimeCode, timestamp, garmentToDelete)
+
+            // Handle response, return modelId returned from revery
+            if (response.isSuccessful) {
+                val responseBody = response.body()
+                if (responseBody != null) {
+                    println(TAG + "Raw JSON Response: $responseBody")
+                    modelIdToDelete = responseBody.asJsonObject.get("model_id").asString
+
+                    return modelIdToDelete
+                } else {
+                    println(TAG + "Response body is null.")
+                }
+            } else {
+                println(TAG + "API request failed with status code: ${response.code()}")
+            }
+        } catch (e: Exception) {
+            println(TAG + "Error fetching data: ${e.message}")
+        }
+
+        return modelIdToDelete
+    }
+
+
+    suspend fun requestTryOn(garments: Map<String, String>, modelId: String, shoesId: String?, background: String = "white", tuckIn: Boolean = false): TryOnResponse {
+        try {
+            // Make the request body
+            val requestBody = TryOnRequest(garments, modelId, shoesId, background, tuckIn)
+
+            // Make request to request_tryon endpoint
+            val response = api.requestTryOn(publicKey, oneTimeCode, timestamp, requestBody)
+
+            // Handle response
+            if (response.isSuccessful) {
+                val responseBody = response.body()
+                if (responseBody != null) {
+                    println(TAG + "Raw JSON Response: $responseBody")
+                    val tryOnResponse = gson.fromJson(responseBody, TryOnResponse::class.java)
+                    return tryOnResponse
+                } else {
+                    println(TAG + "Response body is null.")
+                }
+            } else {
+                println(TAG + "API request failed with status code: ${response.code()}")
+            }
+        } catch (e: Exception) {
+            println(TAG + "Error fetching data: ${e.message}")
+        }
+        // Return an empty response or handle errors appropriately
+        return TryOnResponse() // Return a default empty response or handle errors appropriately
+    }
 }
