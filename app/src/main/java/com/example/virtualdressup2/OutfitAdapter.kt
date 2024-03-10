@@ -10,13 +10,25 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.virtualdressup2.RecyclerItem
 import com.example.virtualdressup2.R
+import com.myapp.revery.Garment
 
 class OutfitAdapter(
     private val outfitList: List<RecyclerItem>,
     private val onItemClick: (RecyclerItem) -> Unit
 ) : RecyclerView.Adapter<OutfitAdapter.OutfitViewHolder>() {
 
+    // Default constructor with no parameters
+    constructor() : this(emptyList(), {}) // Empty list and empty lambda
+
+
     private var selectedPosition = RecyclerView.NO_POSITION
+
+    private var outfits: List<Garment> = listOf()
+
+    fun setItems(outfits: List<Garment>) {
+        this.outfits = outfits
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OutfitViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false)
@@ -27,6 +39,14 @@ class OutfitAdapter(
         val currentItem = outfitList[position]
         holder.bind(currentItem)
         holder.itemView.isSelected = position == selectedPosition
+    }
+
+    fun getSelectedOutfit(): Garment? {
+        return if (selectedPosition != RecyclerView.NO_POSITION) {
+            outfits[selectedPosition]
+        } else {
+            null
+        }
     }
 
     override fun getItemCount() = outfitList.size

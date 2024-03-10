@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.outfitButton.setOnClickListener {
-            val intent = Intent(this, OutfitActivity::class.java)
+            val intent = Intent(this, SelectOutfitActivity::class.java)
             startActivity(intent)
         }
 
