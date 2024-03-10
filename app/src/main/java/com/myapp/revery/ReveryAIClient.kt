@@ -123,7 +123,7 @@ class ReveryAIClient {
      *     "success": true
      * }
      */
-    suspend fun getFilteredGarments(garmentID: String): Garment {
+    suspend fun getGarment(garmentID: String): Garment {
         try {
             // Make request to get_specific_garment endpoint.
             val response = api.getSpecificGarment(publicKey, oneTimeCode, timestamp, garmentID)
