@@ -9,7 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.virtualdressup2.databinding.ActivitySignInBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.myapp.revery.GarmentToDelete
+import com.myapp.revery.GarmentToModify
 import com.myapp.revery.GarmentToUpload
+import com.myapp.revery.ModelToUpload
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -23,6 +25,24 @@ fun getGarments(){
         reveryClient.getFilteredGarments()
         reveryClient.getModels(ReveryAIConstants.FEMALE)
         reveryClient.getModels(ReveryAIConstants.MALE)
+
+//        val modelID = reveryClient.uploadModel(
+//            ModelToUpload(
+//                gender = ReveryAIConstants.FEMALE,
+//                model_img_url = "https://humanaigc-outfitanyone.hf.space/--replicas/ppht9/file=/tmp/gradio/28dbd2deba1e160bfadffbc3675ba4dcac20ca58/Eva_0.png",
+//                standardized = false
+//            )
+//        )
+//        reveryClient.getModels(modelID)
+//        println("MODEL_ID" + modelID)
+//
+//        val modifyGarmentId = reveryClient.modifyGarment(
+//            GarmentToModify(
+//                garment_id = "7047a79ff16b3393b5b2ff4d35ac8b8e_OSvW9UEh5H6u"
+//            )
+//        )
+//        println("MODIFY_GARMENT_ID" + modifyGarmentId)
+
 //        val deletedGarmentId = reveryClient.garmentToDelete(
 //            GarmentToDelete(
 //                garment_id = "7047a79ff16b3393b5b2ff4d35ac8b8e_YfkM51ZFfOwB"

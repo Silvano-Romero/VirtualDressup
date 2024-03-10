@@ -10,6 +10,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.virtualdressup2.databinding.FragmentCalendarDialogBinding
 
 class CalendarDialogFragment : DialogFragment() {
+    interface OnItemClickListener {
+        fun onItemClick(outfit: RecyclerItem)
+    }
+
     private var _binding: FragmentCalendarDialogBinding? = null
     private val binding get() = _binding!!
 
@@ -41,7 +45,11 @@ class CalendarDialogFragment : DialogFragment() {
         binding.submitButton.setOnClickListener {
             val selectedOutfit = getSelectedOutfit()
             if (selectedOutfit != null) {
-                Toast.makeText(context, "Selected outfit: ${selectedOutfit.heading}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    "Selected outfit: ${selectedOutfit.heading}",
+                    Toast.LENGTH_SHORT
+                ).show()
             } else {
                 Toast.makeText(context, "Please select an outfit", Toast.LENGTH_SHORT).show()
             }
@@ -57,8 +65,9 @@ class CalendarDialogFragment : DialogFragment() {
         _binding = null
     }
 
-    private fun onItemClick(position: RecyclerItem) {
+    private fun onItemClick(outfit: RecyclerItem) {
         // Handle item click here
+        Toast.makeText(context, "Selected outfit: ${outfit.heading}", Toast.LENGTH_SHORT).show()
     }
 
     private fun getSelectedOutfit(): RecyclerItem? {
@@ -67,4 +76,3 @@ class CalendarDialogFragment : DialogFragment() {
         return outfitList.getOrNull(selectedPosition)
     }
 }
-

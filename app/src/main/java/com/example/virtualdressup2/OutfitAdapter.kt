@@ -38,7 +38,9 @@ class OutfitAdapter(
     override fun onBindViewHolder(holder: OutfitViewHolder, position: Int) {
         val currentItem = outfitList[position]
         holder.bind(currentItem)
-        holder.itemView.isSelected = position == selectedPosition
+        holder.itemView.setOnClickListener {
+            onItemClick(currentItem)
+        }
     }
 
     fun getSelectedOutfit(): Garment? {
@@ -55,20 +57,10 @@ class OutfitAdapter(
         private val titleImage: ImageView = itemView.findViewById(R.id.outfitImage)
         private val tvHeading: TextView = itemView.findViewById(R.id.outfitName)
 
-        init {
-            itemView.setOnClickListener {
-                val position = adapterPosition
-                if (position != RecyclerView.NO_POSITION) {
-                    selectedPosition = position
-                    onItemClick(outfitList[position])
-                    notifyDataSetChanged()
-                }
-            }
-        }
-
         fun bind(outfit: RecyclerItem) {
             titleImage.setImageResource(outfit.titleImage)
             tvHeading.text = outfit.heading
         }
     }
 }
+

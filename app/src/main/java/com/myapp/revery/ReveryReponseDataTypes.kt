@@ -88,3 +88,18 @@ data class ModelMetadata(
     val version: String
 )
 { constructor() : this("", "", "", null, "") }
+
+data class GarmentToModify(
+    val garment_id: String,
+    val category: String? = null, // optional field
+    val sub_category: String? = null, // optional field
+    val gender: String? = null, // optional field
+    val brand: String? = null, // optional field
+    val url: String? = null // optional field
+)
+
+data class ModelToUpload(
+    val gender: String,
+    val model_img_url: String,
+    val standardized: Boolean
+)

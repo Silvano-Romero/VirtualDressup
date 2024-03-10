@@ -50,4 +50,16 @@ interface ReveryAIService {
                              @Header("one_time_code") oneTimeCode: String,
                              @Header("timestamp") timeStamp: String,
                              @Body request: TryOnRequest): Response<JsonElement>
+    @PUT("modify_garment")
+    suspend fun modifyGarment(@Header("public_key") publicKey: String,
+                              @Header("one_time_code") oneTimeCode: String,
+                              @Header("timestamp") timeStamp: String,
+                              @Body request:GarmentToModify): Response<JsonElement>
+
+    @POST("process_new_model")
+    suspend fun uploadSpecificModel(@Header("public_key") publicKey: String,
+                                      @Header("one_time_code") oneTimeCode: String,
+                                      @Header("timestamp") timeStamp: String,
+                                      @Body request: ModelToUpload): Response<JsonElement>
 }
+

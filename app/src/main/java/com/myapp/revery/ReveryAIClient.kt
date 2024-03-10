@@ -318,7 +318,6 @@ class ReveryAIClient {
         return Models()
     }
 
-
     suspend fun deleteModel(modelId: String): String {
         var modelIdToDelete = ""
 
@@ -350,7 +349,6 @@ class ReveryAIClient {
         return modelIdToDelete
     }
 
-
     suspend fun requestTryOn(garments: Map<String, String>, modelId: String, shoesId: String?, background: String = "white", tuckIn: Boolean = false): TryOnResponse {
         try {
             // Make the request body
@@ -378,4 +376,64 @@ class ReveryAIClient {
         // Return an empty response or handle errors appropriately
         return TryOnResponse() // Return a default empty response or handle errors appropriately
     }
+
+
+    suspend fun uploadModel(model: ModelToUpload): String {
+        var modelId = ""
+
+        try {
+            // Make request to process_new_garment endpoint.
+            val response = api.uploadSpecificModel(publicKey, oneTimeCode, timestamp, model)
+
+            // Handle response, return garmentId returned from revery
+            // Handle response, return garmentId returned from revery
+            if (response.isSuccessful) {
+                val responseBody = response.body()
+                if (responseBody != null) {
+                    println(TAG + "Raw JSON Response: $responseBody")
+                    modelId = responseBody.asJsonObject.get("garment_id").asString
+
+                    return modelId
+                } else {
+                    println(TAG + "Response body is null.")
+                }
+            } else {
+                println(TAG + "API request failed with status code: ${response.code()}")
+            }
+        } catch (e: Exception) {
+            println(TAG + "Error fetching data: ${e.message}")
+        }
+
+        return modelId
+    }
+
+    suspend fun modifyGarment(garment: GarmentToModify): String {
+        var garmentId = ""
+
+        try {
+            // Make request to delete_model endpoint.
+            val response = api.modifyGarment(publicKey, oneTimeCode, timestamp, garment)
+
+            // Handle response, return garmentId returned from revery
+            if (response.isSuccessful) {
+                val responseBody = response.body()
+                if (responseBody != null) {
+                    println(TAG + "Raw JSON Response: $responseBody")
+                    garmentId = responseBody.asJsonObject.get("garment_id").asString
+
+                    return garmentId
+                } else {
+                    println(TAG + "Response body is null.")
+                }
+            } else {
+                println(TAG + "API request failed with status code: ${response.code()}")
+            }
+        } catch (e: Exception) {
+            println(TAG + "Error fetching data: ${e.message}")
+        }
+
+        return garmentId
+    }
+
 }
+
