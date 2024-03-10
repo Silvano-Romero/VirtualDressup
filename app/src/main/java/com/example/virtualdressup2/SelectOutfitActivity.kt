@@ -22,6 +22,23 @@ class SelectOutfitActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var outfitAdapter: OutfitAdapter
 
+
+    // PLACEHOLDER ****
+    private val outfitList = arrayListOf(
+        RecyclerItem(R.drawable.outfit1, "Outfit 1"),
+        RecyclerItem(R.drawable.outfit2, "Outfit 2"),
+        RecyclerItem(R.drawable.outfit3, "Outfit 3"),
+        RecyclerItem(R.drawable.outfit4, "Outfit 4"),
+        RecyclerItem(R.drawable.outfit5, "Outfit 5"),
+        RecyclerItem(R.drawable.outfit6, "Outfit 6"),
+        RecyclerItem(R.drawable.outfit1, "Outfit 7"),
+        RecyclerItem(R.drawable.outfit2, "Outfit 8"),
+        RecyclerItem(R.drawable.outfit3, "Outfit 9"),
+        RecyclerItem(R.drawable.outfit4, "Outfit 10"),
+        RecyclerItem(R.drawable.outfit5, "Outfit 11"),
+        RecyclerItem(R.drawable.outfit6, "Outfit 12")
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.select_outfit)
@@ -32,7 +49,9 @@ class SelectOutfitActivity : AppCompatActivity() {
         // Initialize RecyclerView and adapter
         recyclerView = findViewById(R.id.recyclerViewOutfits)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        outfitAdapter = OutfitAdapter()
+        outfitAdapter = OutfitAdapter(outfitList) { onItemClick(it)
+
+        }
         recyclerView.adapter = outfitAdapter
 
         // Fetch and display initial outfit
@@ -78,5 +97,10 @@ class SelectOutfitActivity : AppCompatActivity() {
             // Show an error message or handle the case where no outfit is selected
             Toast.makeText(this@SelectOutfitActivity, "Outfit failed to save", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun onItemClick(position: RecyclerItem) {
+        // Handle item click here
+        Toast.makeText(this, "Clicked on: ${position.heading}", Toast.LENGTH_SHORT).show()
     }
 }
