@@ -2,16 +2,14 @@ package com.example.virtualdressup2
 
 // SelectOutfitActivity.kt
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.virtualdressup2.OutfitAdapter
-import com.example.virtualdressup2.R
 import com.myapp.firebase.users.UserDAO
-import com.myapp.revery.FilteredGarmentsResponse
 import com.myapp.revery.Garment
 import com.myapp.revery.ReveryAIClient
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +22,6 @@ class SelectOutfitActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var outfitAdapter: OutfitAdapter
 
-    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.select_outfit)
@@ -41,10 +38,10 @@ class SelectOutfitActivity : AppCompatActivity() {
         // Fetch and display initial outfit
         fetchAndDisplayOutfit()
 
-        // Set click listener for the button to select a new outfit
+        // Set click listener for the "Save Outfit" button
         findViewById<Button>(R.id.buttonSave).setOnClickListener {
-            // Fetch and display a new outfit when the button is clicked
-            fetchAndDisplayOutfit()
+            // Save the selected outfit
+            saveSelectedOutfit()
         }
     }
 
@@ -64,16 +61,22 @@ class SelectOutfitActivity : AppCompatActivity() {
     private fun saveSelectedOutfit() {
         // Get the selected outfit from the adapter
         val selectedOutfit = outfitAdapter.getSelectedOutfit()
-        val UserDAO = UserDAO()
 
         // Check if an outfit is selected
         if (selectedOutfit != null) {
             // Save the selected outfit to the database
             GlobalScope.launch(Dispatchers.IO) {
-                UserDAO.writeDocumentToCollection("outfits", selectedOutfit.id.toString(), selectedOutfit)
+                val userDAO = UserDAO()
+                val outfitId = selectedOutfit.id.toString()
+                userDAO.writeDocumentToCollection("outfits", outfitId, selectedOutfit)
+                // Display success message
+                runOnUiThread {
+                    Toast.makeText(this@SelectOutfitActivity, "Outfit Saved", Toast.LENGTH_SHORT).show()
+                }
             }
         } else {
             // Show an error message or handle the case where no outfit is selected
+            Toast.makeText(this@SelectOutfitActivity, "Outfit failed to save", Toast.LENGTH_SHORT).show()
         }
     }
 }
