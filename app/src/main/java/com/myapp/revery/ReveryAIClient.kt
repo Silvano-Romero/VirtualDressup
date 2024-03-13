@@ -377,15 +377,14 @@ class ReveryAIClient {
         return TryOnResponse() // Return a default empty response or handle errors appropriately
     }
 
-
+    // Erwin Pan worked on bottom two methods
     suspend fun uploadModel(model: ModelToUpload): String {
         var modelId = ""
 
         try {
-            // Make request to process_new_garment endpoint.
+            // Make request to process_new_model endpoint.
             val response = api.uploadSpecificModel(publicKey, oneTimeCode, timestamp, model)
 
-            // Handle response, return garmentId returned from revery
             // Handle response, return garmentId returned from revery
             if (response.isSuccessful) {
                 val responseBody = response.body()
@@ -411,7 +410,7 @@ class ReveryAIClient {
         var garmentId = ""
 
         try {
-            // Make request to delete_model endpoint.
+            // Make request to modify_garment endpoint.
             val response = api.modifyGarment(publicKey, oneTimeCode, timestamp, garment)
 
             // Handle response, return garmentId returned from revery

@@ -89,6 +89,7 @@ data class ModelMetadata(
 )
 { constructor() : this("", "", "", null, "") }
 
+// Erwin Pan worked on bottom two data classes
 data class GarmentToModify(
     val garment_id: String,
     val category: String? = null, // optional field

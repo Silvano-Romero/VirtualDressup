@@ -26,22 +26,22 @@ fun getGarments(){
         reveryClient.getModels(ReveryAIConstants.FEMALE)
         reveryClient.getModels(ReveryAIConstants.MALE)
 
-//        val modelID = reveryClient.uploadModel(
-//            ModelToUpload(
-//                gender = ReveryAIConstants.FEMALE,
-//                model_img_url = "https://humanaigc-outfitanyone.hf.space/--replicas/ppht9/file=/tmp/gradio/28dbd2deba1e160bfadffbc3675ba4dcac20ca58/Eva_0.png",
-//                standardized = false
-//            )
-//        )
-//        reveryClient.getModels(modelID)
-//        println("MODEL_ID" + modelID)
-//
-//        val modifyGarmentId = reveryClient.modifyGarment(
-//            GarmentToModify(
-//                garment_id = "7047a79ff16b3393b5b2ff4d35ac8b8e_OSvW9UEh5H6u"
-//            )
-//        )
-//        println("MODIFY_GARMENT_ID" + modifyGarmentId)
+        val modelID = reveryClient.uploadModel(
+            ModelToUpload(
+                gender = ReveryAIConstants.FEMALE,
+                model_img_url = "https://humanaigc-outfitanyone.hf.space/--replicas/ppht9/file=/tmp/gradio/28dbd2deba1e160bfadffbc3675ba4dcac20ca58/Eva_0.png",
+                standardized = false
+            )
+        )
+        reveryClient.getModels(modelID)
+        println("MODEL_ID" + modelID)
+
+        val modifyGarmentId = reveryClient.modifyGarment(
+            GarmentToModify(
+                garment_id = "7047a79ff16b3393b5b2ff4d35ac8b8e_OSvW9UEh5H6u"
+            )
+        )
+        println("MODIFY_GARMENT_ID" + modifyGarmentId)
 
 //        val deletedGarmentId = reveryClient.garmentToDelete(
 //            GarmentToDelete(

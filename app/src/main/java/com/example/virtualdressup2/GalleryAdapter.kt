@@ -7,41 +7,48 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
+// Adapter class for populating a RecyclerView with outfit items
 class GalleryAdapter(
-    private val outfitList: List<RecyclerItem>,
-    private val onItemClick: (RecyclerItem) -> Unit
+    private val outfitList: List<RecyclerItem>, // List of outfit items to display
+    private val onItemClick: (RecyclerItem) -> Unit // Callback function for item click events
 ) : RecyclerView.Adapter<GalleryAdapter.GalleryViewHolder>() {
 
-    private var selectedPosition = RecyclerView.NO_POSITION
+    private var selectedPosition = RecyclerView.NO_POSITION // Track the currently selected position
 
+    // Create a new view holder when needed
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GalleryViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.gallery_list, parent, false)
         return GalleryViewHolder(itemView)
     }
 
+    // Bind data to the view holder
     override fun onBindViewHolder(holder: GalleryViewHolder, position: Int) {
         val currentItem = outfitList[position]
         holder.bind(currentItem)
-        holder.itemView.isSelected = position == selectedPosition
+        holder.itemView.isSelected = position == selectedPosition // Highlight the selected item
     }
 
+    // Return the total number of items in the list
     override fun getItemCount() = outfitList.size
 
+    // Inner class representing the view holder for each item
     inner class GalleryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val titleImage: ImageView = itemView.findViewById(R.id.outfitImage)
         private val tvHeading: TextView = itemView.findViewById(R.id.outfitName)
 
+        // Initialize item click listener
         init {
             itemView.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     selectedPosition = position
-                    onItemClick(outfitList[position])
-                    notifyDataSetChanged()
+                    onItemClick(outfitList[position]) // Invoke the item click callback
+                    notifyDataSetChanged() // Update the view to reflect the selection change
                 }
             }
         }
 
+        // Bind outfit data to the views
         fun bind(outfit: RecyclerItem) {
             titleImage.setImageResource(outfit.titleImage)
             tvHeading.text = outfit.heading

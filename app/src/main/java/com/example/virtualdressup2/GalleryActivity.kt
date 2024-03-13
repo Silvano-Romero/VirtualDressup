@@ -7,9 +7,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.virtualdressup2.databinding.ActivityGalleryBinding
 
+// Activity class to display a gallery of outfits
 class GalleryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGalleryBinding
 
+    // List of outfits to display in the gallery
     private val outfitList = arrayListOf(
         RecyclerItem(R.drawable.outfit1, "Outfit 1"),
         RecyclerItem(R.drawable.outfit2, "Outfit 2"),
@@ -21,16 +23,18 @@ class GalleryActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Inflate the layout using view binding
         binding = ActivityGalleryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Set up click listener for the back button to navigate to the main activity
         binding.backButton.setOnClickListener(){
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
         }
 
-        // Use GridLayoutManager with span count 2 for two columns
+        // Use GridLayoutManager to display outfits in a grid with two columns
         val layoutManager = GridLayoutManager(this, 2)
         binding.galleryRecyclerView.layoutManager = layoutManager
 
@@ -41,8 +45,9 @@ class GalleryActivity : AppCompatActivity() {
         binding.galleryRecyclerView.adapter = adapter
     }
 
+    // Function to handle item click events in the RecyclerView
     private fun onItemClick(position: RecyclerItem) {
-        // Handle item click here
+        // Display a toast message indicating the clicked outfit
         Toast.makeText(this, "Clicked on: ${position.heading}", Toast.LENGTH_SHORT).show()
     }
 }

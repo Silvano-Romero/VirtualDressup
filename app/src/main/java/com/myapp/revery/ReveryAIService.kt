@@ -50,6 +50,8 @@ interface ReveryAIService {
                              @Header("one_time_code") oneTimeCode: String,
                              @Header("timestamp") timeStamp: String,
                              @Body request: TryOnRequest): Response<JsonElement>
+
+    // Erwin Pan worked on bottom two methods
     @PUT("modify_garment")
     suspend fun modifyGarment(@Header("public_key") publicKey: String,
                               @Header("one_time_code") oneTimeCode: String,
