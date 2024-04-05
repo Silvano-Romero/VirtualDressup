@@ -12,6 +12,7 @@ import com.myapp.revery.GarmentToDelete
 import com.myapp.revery.GarmentToModify
 import com.myapp.revery.GarmentToUpload
 import com.myapp.revery.ModelToUpload
+import com.myapp.firebase.revery.AvatarDAO
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -26,41 +27,24 @@ fun getGarments(){
         reveryClient.getModels(ReveryAIConstants.FEMALE)
         reveryClient.getModels(ReveryAIConstants.MALE)
 
-        val modelID = reveryClient.uploadModel(
-            ModelToUpload(
-                gender = ReveryAIConstants.FEMALE,
-                model_img_url = "https://humanaigc-outfitanyone.hf.space/--replicas/ppht9/file=/tmp/gradio/28dbd2deba1e160bfadffbc3675ba4dcac20ca58/Eva_0.png",
-                standardized = false
-            )
-        )
-        reveryClient.getModels(modelID)
-        println("MODEL_ID" + modelID)
-
-        val modifyGarmentId = reveryClient.modifyGarment(
-            GarmentToModify(
-                garment_id = "7047a79ff16b3393b5b2ff4d35ac8b8e_OSvW9UEh5H6u"
-            )
-        )
-        println("MODIFY_GARMENT_ID" + modifyGarmentId)
-
+        println(AvatarDAO().getSpecificAvatar("Avatar"))
 //        val deletedGarmentId = reveryClient.garmentToDelete(
 //            GarmentToDelete(
-//                garment_id = "7047a79ff16b3393b5b2ff4d35ac8b8e_YfkM51ZFfOwB"
+//                garment_id = "7047a79ff16b3393b5b2ff4d35ac8b8e_l8Ix91bkol94"
 //            )
 //        )
 //        println("GARMENT_ID" + deletedGarmentId)
 //        reveryClient.getFilteredGarments()
-//        reveryClient.getSpecificGarment("7047a79ff16b3393b5b2ff4d35ac8b8e_YfkM51ZFfOwB")
+//        reveryClient.getSpecificGarment("7047a79ff16b3393b5b2ff4d35ac8b8e_l8Ix91bkol94")
 //        val garmentID = reveryClient.uploadGarment(
 //            GarmentToUpload(
-//                category = ReveryAIConstants.BOTTOMS,
-//                gender = ReveryAIConstants.FEMALE,
-//                garment_img_url = "https://revery-integration-tools.s3.us-east-2.amazonaws.com/API_website/bottoms.jpeg",
-//                bottoms_sub_category =  ReveryAIConstants.PANTS,
+//                category = ReveryAIConstants.TOPS,
+//                gender = ReveryAIConstants.MALE,
+//                garment_img_url = "https://revery-integration-tools.s3.us-east-2.amazonaws.com/API_website/tops.jpeg",
 //            )
 //        )
+//        println("GARMENT_ID_UPLOADED" + garmentID)
 //        reveryClient.getSpecificGarment(garmentID)
-//        println("GARMENT_ID" + garmentID)
     }
 }
 

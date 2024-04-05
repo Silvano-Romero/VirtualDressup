@@ -9,7 +9,9 @@ class ReveryAIClient {
     private val BASE_URL = "https://api.revery.ai/console/v2/"
     private val TAG = "REVERY_CLIENT_LOG: "
     private val publicKey: String = "7047a79ff16b3393b5b2ff4d35ac8b8e"
+    //private val publicKey: String = "d04ba8af7a7ff44914b68519eb65c1b9"
     private val privateKey: String = "94ef51828c7a0a3a002042d7c32cff8e"
+    //private val privateKey: String = "838f61e38496f926673903d2d26eb0d8"
     private val credentials: Map<String, String> =
         Authentication().getAuthenticationHeader(publicKey, privateKey)
     private val oneTimeCode: String = credentials["one_time_code"] as String
@@ -123,7 +125,7 @@ class ReveryAIClient {
      *     "success": true
      * }
      */
-    suspend fun getGarment(garmentID: String): Garment {
+    suspend fun getSpecificGarment(garmentID: String): Garment {
         try {
             // Make request to get_specific_garment endpoint.
             val response = api.getSpecificGarment(publicKey, oneTimeCode, timestamp, garmentID)
