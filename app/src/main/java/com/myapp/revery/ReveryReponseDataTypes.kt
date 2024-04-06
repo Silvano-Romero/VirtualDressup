@@ -69,7 +69,7 @@ data class TryOnRequest(
     val garments: Map<String, String>,
     val model_id: String,
     val shoes_id: String? = null,
-    val background: String? = null,
+    val background: String = "white",
     val tuck_in: Boolean? = null
 )
 

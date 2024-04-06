@@ -30,7 +30,7 @@ fun getGarments(){
         val female = reveryClient.getModels(ReveryAIConstants.FEMALE)
         val gender = reveryClient.getModels(ReveryAIConstants.MALE)
 
-        println(AvatarDAO().getSpecificAvatar("Avatar"))
+        //println(AvatarDAO().getSpecificAvatar("Avatar"))
         val deletedGarmentId = reveryClient.garmentToDelete(
             GarmentToDelete(
                 garment_id = "7047a79ff16b3393b5b2ff4d35ac8b8e_l8Ix91bkol94"
@@ -50,11 +50,12 @@ fun getGarments(){
         reveryClient.getSpecificGarment(garmentID)
 
         val garments = mapOf(
-            "tops" to "7047a79ff16b3393b5b2ff4d35ac8b8e_l8Ix91bkol94",
+            "tops" to "7047a79ff16b3393b5b2ff4d35ac8b8e_z52g6siOWP6A",
+            "bottoms" to "7047a79ff16b3393b5b2ff4d35ac8b8e_VbcHFMmOfzey"
         )
-        val tryOnResponse = reveryClient.requestTryOn(garments, "a40ae925907de0ca0731e4b75cb57590", null, "white")
+        val tryOnResponse = reveryClient.requestTryOn(garments, "d79b5e0a1b2fd3817da7c3a26005b4b0", null, "white", false)
 
-        println("male: " + gender)
+        println("male111: " + gender)
         println("female: " + female)
         println("Try-On Response: $tryOnResponse")
         println("TEST... " + tryOnResponse)

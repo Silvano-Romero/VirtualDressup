@@ -351,25 +351,40 @@ class ReveryAIClient {
         return modelIdToDelete
     }
 
-    suspend fun requestTryOn(garments: Map<String, String>, model_id: String, shoes_id: String?, background: String? = "white", tuck_in: Boolean? = false): TryOnResponse {
+    suspend fun requestTryOn(garments: Map<String, String>, model_id: String, shoes_id: String?, background: String = "white", tuck_in: Boolean? = false): TryOnResponse {
         try {
             // Make the request body
             val requestBody = TryOnRequest(garments, model_id, shoes_id, background, tuck_in)
+//            val requestBody = mapOf(
+//                "garments" to garments,
+//                "model_id" to model_id,
+//                "shoes_id" to shoes_id,
+//                "background" to background,
+//                "tuck_in" to tuck_in.toString()
+//            )
 
             // Make request to request_tryon endpoint
+            println("HELLO WORLD1")
             val response = api.requestTryOn(publicKey, oneTimeCode, timestamp, requestBody)
-
+            println("HELLO 2")
+            println("RESPONSE1" + response)
             // Handle response
             if (response.isSuccessful) {
+                println("HELLO WORLD3")
                 val responseBody = response.body()
+                println("HELLO WORLD4")
                 if (responseBody != null) {
+                    println("HELLO WORLD5")
                     println(TAG + "Raw JSON Response Gabe: $responseBody")
                     val tryOnResponse = gson.fromJson(responseBody, TryOnResponse::class.java)
+                    println("HELLO SUCCESS!")
                     return tryOnResponse
                 } else {
+                    println("HELLO WORLD6")
                     println(TAG + "Response body is null.")
                 }
             } else {
+                println("HELLO WORLD7")
                 println(TAG + "API request failed with status code Gabe2: ${response.code()}")
             }
         } catch (e: Exception) {
