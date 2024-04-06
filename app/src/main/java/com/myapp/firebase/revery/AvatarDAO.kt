@@ -3,52 +3,112 @@ package com.myapp.firebase.revery
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
 import com.myapp.firebase.Avatar
 import com.myapp.firebase.DAO
+import com.myapp.firebase.FirebaseConnection
 import com.myapp.firebase.Outfit
 import kotlinx.coroutines.tasks.await
 
 private var profilesCollectionName = "Profiles"
-class AvatarDAO : DAO(){
-    suspend fun getSpecificAvatar(avatarID: String): Avatar? {
+private var avatarsCollectionName = "Avatars"
+private var outfitsSubCollectionName = "Outfits"
+class AvatarDAO : DAO() {
+    private var database: FirebaseFirestore = FirebaseConnection().getDatabaseInstance()
+    // This method retrieves all avatars from a specific profile and returns a list of
+    // avatar data types.
+    suspend fun getAvatarsFromProfile(profileID: String): List<Avatar> {
         var profiles: List<DocumentSnapshot> = getAllDocumentsFromCollection(profilesCollectionName)
-        var outfitsList: MutableList<Outfit> = mutableListOf()
-        for(profile in profiles){
-            if(profile.id == avatarID) {
-                println("Document ID: ${profile.id}")
-                println("Document Model: ${profile.get("ModelID")}")
-                println("Document Outfits: ${profile.reference.collection("Outfits")}")
+        var avatarsList: MutableList<Avatar> = mutableListOf()
 
-                var outfits: CollectionReference = profile.reference.collection("Outfits")
-                outfits.get()
-                    .addOnSuccessListener { querySnapshot: QuerySnapshot ->
-                        // Handle query snapshot
-                        if (!querySnapshot.isEmpty) {
-
-                            for (outfit in querySnapshot.documents) {
-
-                                // Get fields from each outfit
+        for (profile in profiles) {
+            var outfitsList: MutableList<Outfit> = mutableListOf()
+            if (profile.id == profileID) {
+                var avatars: CollectionReference = profile.reference.collection(avatarsCollectionName)
+                var avatarID: String = ""
+                // Await avatars.get()
+                val avatarsSnapshot = avatars.get().await()
+                if (!avatarsSnapshot.isEmpty) {
+                    // Iterate through all avatars and create avatar object
+                    for (avatar in avatarsSnapshot.documents) {
+                        avatarID = avatar.id
+                        val outfitsRef = avatar.reference.collection(outfitsSubCollectionName)
+                        val outfitsSnapshot = outfitsRef.get().await()
+                        val modelID: String  = avatar.getString("Model") as String
+                        // Gather all the outfits for each avatar and create outfit object
+                        if (!outfitsSnapshot.isEmpty) {
+                            for (outfit in outfitsSnapshot.documents) {
                                 val outfitID = outfit.id
                                 val bottomGarmentID: String  = outfit.getString("Bottom") as String
                                 val topGarmentID: String = outfit.getString("Top") as String
-
-                                // Create custom objects or perform other actions
-                                println("Outfit ID: $outfitID, Bottom: $bottomGarmentID, Top: $topGarmentID")
                                 outfitsList.add(Outfit(outfitID, topGarmentID, bottomGarmentID))
-                                println(outfitsList)
-
                             }
                         } else {
                             println("No documents found in the outfits.")
                         }
+                        avatarsList.add(Avatar(avatarID, modelID, outfitsList))
                     }
-                    .addOnFailureListener { exception ->
-                        println("Error fetching documents: ${exception.message}")
-                    }.await()
-                return Avatar(avatarID, outfitsList)
+                } else {
+                    println("No documents found in the avatars.")
+                }
             }
         }
-        return null
+
+        return avatarsList
+    }
+    // Get a specific avatar from a profile
+    suspend fun getSpecificAvatarFromProfile(profileID: String, avatarID: String): Avatar{
+        val avatars = getAvatarsFromProfile(profileID)
+        for(avatar in avatars){
+            if(avatar.avatarID == avatarID){
+                return avatar
+            }
+        }
+        return Avatar()
+    }
+
+    // Get all available profiles
+    suspend fun getAllProfileIDs(): List<String>{
+        var profiles: List<DocumentSnapshot> = getAllDocumentsFromCollection(profilesCollectionName)
+        var profileIDS: MutableList<String> = mutableListOf()
+        for(profile in profiles){
+            profileIDS.add(profile.id)
+        }
+
+        return profileIDS
+    }
+
+    // Add an avatar document to a profile. Avatar will be added with a list of outfits and model id.
+    suspend fun addAvatarToProfile(profileID: String, avatar: Avatar){
+        var avatarsCollRef = database.collection(profilesCollectionName)
+            .document(profileID.toString())
+            .collection(avatarsCollectionName)
+
+        var avatarDocRef = avatarsCollRef.document(avatar.avatarID)
+        avatarDocRef.set(mapOf(
+            "Model" to avatar.modelID,
+        ))
+
+        var outfitsSubCollRef = avatarDocRef.collection(outfitsSubCollectionName)
+        for(outfit in avatar.outfits){
+            var outfitDocRef = outfitsSubCollRef.document(outfit.outfitID)
+                .set(mapOf(
+                    "Top" to outfit.top,
+                    "Bottom" to outfit.bottom,
+                    ))
+        }
+    }
+    // Add an outfit dociment to outfits collection of a specific avatar document.
+    suspend fun addOutfitToAvatar(profileID: String, avatarID: String, outfit: Outfit){
+        var outfitsCollRef = database.collection(profilesCollectionName)
+            .document(profileID)
+            .collection(avatarsCollectionName)
+            .document(avatarID)
+            .collection(outfitsSubCollectionName)
+        outfitsCollRef.document(outfit.outfitID)
+            .set(mapOf(
+                "Top" to outfit.top,
+                "Bottom" to outfit.bottom,
+            ))
     }
 }
+

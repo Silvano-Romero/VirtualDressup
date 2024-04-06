@@ -30,5 +30,13 @@ class ProfileDAO : DAO() {
      */
     suspend fun writeProfileToProfilesCollection(userID: Int, profileData: Map<String, Any>) {
         writeDocumentToCollection("Profiles", userID.toString(), profileData)
+        val profileDocRef = database.collection("Profiles").document(userID.toString())
+        println("PROFILE_REF $profileDocRef")
+
+        val subCol = profileDocRef.collection("Avatars")
+            .document("DefaultAvatar")
+            .set(mapOf(
+            "Model" to "DefaultModelID"
+            ))
     }
 }
