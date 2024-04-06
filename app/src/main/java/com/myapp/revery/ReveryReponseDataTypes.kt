@@ -30,8 +30,9 @@ data class TryOn(
     @SerialName("bottoms_sub_category")
     val bottomsSubCategory: String?, // Optional field
     @SerialName("open_outerwear")
-    val openOuterwear: Boolean
-){ constructor() : this("", "",false) }
+    val openOuterwear: Boolean,
+    val enabled: Boolean,
+){ constructor() : this("", "",false, false) }
 data class GarmentToUpload(
     val category: String,
     val bottoms_sub_category: String? = null,

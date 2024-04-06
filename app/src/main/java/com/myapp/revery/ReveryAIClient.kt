@@ -1,6 +1,7 @@
 package com.myapp.revery
 
 import com.google.gson.Gson
+import com.google.gson.JsonObject
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -136,9 +137,8 @@ class ReveryAIClient {
                 if (responseBody != null) {
                     // Parse response body and transform into data classes.
                     println(TAG + "Raw JSON Response: $responseBody")
-                    val garment = gson.fromJson(responseBody, Garment::class.java)
-                    println(TAG + garment)
-                    return garment
+
+                    return getGarmentFromGarmentJson(responseBody.asJsonObject.get("garment").asJsonObject)
                 } else {
                     println(TAG + "Response body is null.")
                 }
@@ -392,7 +392,7 @@ class ReveryAIClient {
                 val responseBody = response.body()
                 if (responseBody != null) {
                     println(TAG + "Raw JSON Response: $responseBody")
-                    modelId = responseBody.asJsonObject.get("garment_id").asString
+                    modelId = responseBody.asJsonObject.get("model_id").asString
 
                     return modelId
                 } else {
@@ -435,6 +435,26 @@ class ReveryAIClient {
 
         return garmentId
     }
+
+    private fun getGarmentFromGarmentJson(garmentJson: JsonObject): Garment {
+        val imageUrlJson = garmentJson.get("image_urls").asJsonObject
+        val tryOnJson = garmentJson.get("tryon").asJsonObject
+
+        return Garment(
+            garmentJson.get("gender").toString(),
+            garmentJson.get("id").toString(),
+            ImageUrls(
+                imageUrlJson.get("product_image").toString()
+            ),
+            TryOn(
+                tryOnJson.get("bottoms_sub_category").toString(),
+                tryOnJson.get("category").toString(),
+                tryOnJson.get("open_outerwear").asBoolean,
+                tryOnJson.get("enabled").asBoolean,
+            )
+        )
+    }
+
 
 }
 
