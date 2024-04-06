@@ -8,11 +8,14 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.virtualdressup2.databinding.ActivitySignInBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.myapp.firebase.Avatar
+import com.myapp.firebase.Outfit
 import com.myapp.revery.GarmentToDelete
 import com.myapp.revery.GarmentToModify
 import com.myapp.revery.GarmentToUpload
 import com.myapp.revery.ModelToUpload
 import com.myapp.firebase.revery.AvatarDAO
+import com.myapp.firebase.users.ProfileDAO
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -23,6 +26,7 @@ fun getGarments(){
     GlobalScope.launch(Dispatchers.IO) {
         val reveryClient = ReveryAIClient()
         reveryClient.getFilteredGarments()
+
         val female = reveryClient.getModels(ReveryAIConstants.FEMALE)
         val gender = reveryClient.getModels(ReveryAIConstants.MALE)
 
@@ -54,6 +58,46 @@ fun getGarments(){
         println("female: " + female)
         println("Try-On Response: $tryOnResponse")
         println("TEST... " + tryOnResponse)
+
+        reveryClient.getModels(ReveryAIConstants.FEMALE)
+        reveryClient.getModels(ReveryAIConstants.MALE)
+//        ProfileDAO().writeProfileToProfilesCollection(123, mapOf(
+//            "firstName" to "Silvano",
+//        ))
+        var ids = AvatarDAO().getAllProfileIDs()
+        for(id in ids){
+            println(id)
+            println(AvatarDAO().getAvatarsFromProfile(id))
+            AvatarDAO().addAvatarToProfile(id, Avatar(
+                "NewAvatar",
+                "MODEL123",
+                listOf(Outfit("OutfitNew123", "TOPGARMENT", "BOTTOMGARMENT"))
+            ))
+        }
+        AvatarDAO().addOutfitToAvatar("Gabe", "Avatar", Outfit(
+            "OUTFIT01",
+            "TOPGARMENT01",
+            "BottomGarment01",
+        ))
+        //println(AvatarDAO().addAvatarToProfile(123))
+//        val deletedGarmentId = reveryClient.garmentToDelete(
+//            GarmentToDelete(
+//                garment_id = "7047a79ff16b3393b5b2ff4d35ac8b8e_l8Ix91bkol94"
+//            )
+//        )
+//        println("GARMENT_ID" + deletedGarmentId)
+//        reveryClient.getFilteredGarments()
+//        reveryClient.getSpecificGarment("7047a79ff16b3393b5b2ff4d35ac8b8e_l8Ix91bkol94")
+//        val garmentID = reveryClient.uploadGarment(
+//            GarmentToUpload(
+//                category = ReveryAIConstants.TOPS,
+//                gender = ReveryAIConstants.MALE,
+//                garment_img_url = "https://revery-integration-tools.s3.us-east-2.amazonaws.com/API_website/tops.jpeg",
+//            )
+//        )
+//        println("GARMENT_ID_UPLOADED" + garmentID)
+//        reveryClient.getSpecificGarment(garmentID)
+// 78b5256d8f61705a2b07cd6092302ef1953ba621
     }
 }
 
