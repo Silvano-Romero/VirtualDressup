@@ -19,32 +19,41 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import com.myapp.revery.ReveryAIClient
 import com.myapp.revery.ReveryAIConstants
-
 fun getGarments(){
     GlobalScope.launch(Dispatchers.IO) {
         val reveryClient = ReveryAIClient()
         reveryClient.getFilteredGarments()
-        reveryClient.getModels(ReveryAIConstants.FEMALE)
-        reveryClient.getModels(ReveryAIConstants.MALE)
+        val female = reveryClient.getModels(ReveryAIConstants.FEMALE)
+        val gender = reveryClient.getModels(ReveryAIConstants.MALE)
 
         println(AvatarDAO().getSpecificAvatar("Avatar"))
-//        val deletedGarmentId = reveryClient.garmentToDelete(
-//            GarmentToDelete(
-//                garment_id = "7047a79ff16b3393b5b2ff4d35ac8b8e_l8Ix91bkol94"
-//            )
-//        )
-//        println("GARMENT_ID" + deletedGarmentId)
-//        reveryClient.getFilteredGarments()
-//        reveryClient.getSpecificGarment("7047a79ff16b3393b5b2ff4d35ac8b8e_l8Ix91bkol94")
-//        val garmentID = reveryClient.uploadGarment(
-//            GarmentToUpload(
-//                category = ReveryAIConstants.TOPS,
-//                gender = ReveryAIConstants.MALE,
-//                garment_img_url = "https://revery-integration-tools.s3.us-east-2.amazonaws.com/API_website/tops.jpeg",
-//            )
-//        )
-//        println("GARMENT_ID_UPLOADED" + garmentID)
-//        reveryClient.getSpecificGarment(garmentID)
+        val deletedGarmentId = reveryClient.garmentToDelete(
+            GarmentToDelete(
+                garment_id = "7047a79ff16b3393b5b2ff4d35ac8b8e_l8Ix91bkol94"
+            )
+        )
+        println("GARMENT_ID" + deletedGarmentId)
+        reveryClient.getFilteredGarments()
+        reveryClient.getSpecificGarment("7047a79ff16b3393b5b2ff4d35ac8b8e_l8Ix91bkol94")
+        val garmentID = reveryClient.uploadGarment(
+            GarmentToUpload(
+                category = ReveryAIConstants.TOPS,
+                gender = ReveryAIConstants.MALE,
+                garment_img_url = "https://revery-integration-tools.s3.us-east-2.amazonaws.com/API_website/tops.jpeg",
+            )
+        )
+        println("GARMENT_ID_UPLOADED " + garmentID)
+        reveryClient.getSpecificGarment(garmentID)
+
+        val garments = mapOf(
+            "tops" to "7047a79ff16b3393b5b2ff4d35ac8b8e_l8Ix91bkol94",
+        )
+        val tryOnResponse = reveryClient.requestTryOn(garments, "a40ae925907de0ca0731e4b75cb57590", null, "white")
+
+        println("male: " + gender)
+        println("female: " + female)
+        println("Try-On Response: $tryOnResponse")
+        println("TEST... " + tryOnResponse)
     }
 }
 

@@ -66,10 +66,10 @@ data class TryOnRequest(
 // Data class representing the request body for the Try-on request
 data class TryOnRequest(
     val garments: Map<String, String>,
-    val modelId: String,
-    val shoesId: String?,
-    val background: String,
-    val tuckIn: Boolean
+    val model_id: String,
+    val shoes_id: String? = null,
+    val background: String? = null,
+    val tuck_in: Boolean? = null
 )
 
 // Data class representing the response from the Try-on request
