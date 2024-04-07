@@ -21,7 +21,7 @@ class AvatarDAO : DAO() {
         var avatarsList: MutableList<Avatar> = mutableListOf()
 
         for (profile in profiles) {
-            var outfitsList: MutableList<Outfit> = mutableListOf()
+
             if (profile.id == profileID) {
                 var avatars: CollectionReference = profile.reference.collection(avatarsCollectionName)
                 var avatarID: String = ""
@@ -30,6 +30,7 @@ class AvatarDAO : DAO() {
                 if (!avatarsSnapshot.isEmpty) {
                     // Iterate through all avatars and create avatar object
                     for (avatar in avatarsSnapshot.documents) {
+                        var outfitsList: MutableList<Outfit> = mutableListOf()
                         avatarID = avatar.id
                         val outfitsRef = avatar.reference.collection(outfitsSubCollectionName)
                         val outfitsSnapshot = outfitsRef.get().await()

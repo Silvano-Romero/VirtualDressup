@@ -497,6 +497,5 @@ class ReveryAIClient {
 
         return GetModels()
     }
-
 }
 
