@@ -27,6 +27,7 @@ fun getGarments(){
         val reveryClient = ReveryAIClient()
         reveryClient.getFilteredGarments()
 
+
         val female = reveryClient.getModels(ReveryAIConstants.FEMALE)
         val gender = reveryClient.getModels(ReveryAIConstants.MALE)
 
@@ -60,26 +61,70 @@ fun getGarments(){
 //        println("Try-On Response: $tryOnResponse")
 //        println("TEST... " + tryOnResponse)
 
+
         reveryClient.getModels(ReveryAIConstants.FEMALE)
         reveryClient.getModels(ReveryAIConstants.MALE)
+
+//        val uploadModelID = reveryClient.uploadModel(
+//            ModelToUpload(
+//                gender = ReveryAIConstants.FEMALE,
+//                model_img_url = "https://humanaigc-outfitanyone.hf.space/--replicas/ppht9/file=/tmp/gradio/28dbd2deba1e160bfadffbc3675ba4dcac20ca58/Eva_0.png",
+//                standardized = false
+//            )
+//        )
+//        println("MODEL_ID_UPLOADED" + uploadModelID)
+//        reveryClient.getModels(ReveryAIConstants.FEMALE)
+
+        //println(AvatarDAO().getSpecificAvatar("Avatar"))
+//        val deletedGarmentId = reveryClient.garmentToDelete(
+//            GarmentToDelete(
+//                garment_id = "7047a79ff16b3393b5b2ff4d35ac8b8e_l8Ix91bkol94"
+//            )
+//        )
+//        println("GARMENT_ID" + deletedGarmentId)
+//        reveryClient.getFilteredGarments()
+//        reveryClient.getSpecificGarment("7047a79ff16b3393b5b2ff4d35ac8b8e_l8Ix91bkol94")
+//        val garmentID = reveryClient.uploadGarment(
+//            GarmentToUpload(
+//                category = ReveryAIConstants.TOPS,
+//                gender = ReveryAIConstants.MALE,
+//                garment_img_url = "https://revery-integration-tools.s3.us-east-2.amazonaws.com/API_website/tops.jpeg",
+//            )
+//        )
+//        println("GARMENT_ID_UPLOADED " + garmentID)
+//        reveryClient.getSpecificGarment(garmentID)
+//
+//        val garments = mapOf(
+//            "tops" to "7047a79ff16b3393b5b2ff4d35ac8b8e_z52g6siOWP6A",
+//            "bottoms" to "7047a79ff16b3393b5b2ff4d35ac8b8e_VbcHFMmOfzey"
+//        )
+//        val tryOnResponse = reveryClient.requestTryOn(garments, "d79b5e0a1b2fd3817da7c3a26005b4b0", null, "white", false)
+//
+//        println("male111: " + gender)
+//        println("female: " + female)
+//        println("Try-On Response: $tryOnResponse")
+//        println("TEST... " + tryOnResponse)
+//
+//        reveryClient.getModels(ReveryAIConstants.FEMALE)
+//        reveryClient.getModels(ReveryAIConstants.MALE)
 //        ProfileDAO().writeProfileToProfilesCollection(123, mapOf(
 //            "firstName" to "Silvano",
 //        ))
-        var ids = AvatarDAO().getAllProfileIDs()
-        for(id in ids){
-            println(id)
-            println(AvatarDAO().getAvatarsFromProfile(id))
-            AvatarDAO().addAvatarToProfile(id, Avatar(
-                "NewAvatar",
-                "MODEL123",
-                listOf(Outfit("OutfitNew123", "TOPGARMENT", "BOTTOMGARMENT"))
-            ))
-        }
-        AvatarDAO().addOutfitToAvatar("Gabe", "Avatar", Outfit(
-            "OUTFIT01",
-            "TOPGARMENT01",
-            "BottomGarment01",
-        ))
+//        var ids = AvatarDAO().getAllProfileIDs()
+//        for(id in ids){
+//            println(id)
+//            println(AvatarDAO().getAvatarsFromProfile(id))
+//            AvatarDAO().addAvatarToProfile(id, Avatar(
+//                "NewAvatar",
+//                "MODEL123",
+//                listOf(Outfit("OutfitNew123", "TOPGARMENT", "BOTTOMGARMENT"))
+//            ))
+//        }
+//        AvatarDAO().addOutfitToAvatar("Gabe", "Avatar", Outfit(
+//            "OUTFIT01",
+//            "TOPGARMENT01",
+//            "BottomGarment01",
+//        ))
         //println(AvatarDAO().addAvatarToProfile(123))
 //        val deletedGarmentId = reveryClient.garmentToDelete(
 //            GarmentToDelete(

@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 
 // Adapter class for populating a RecyclerView with outfit items
 class GalleryAdapter(
-    private val outfitList: List<RecyclerItem>, // List of outfit items to display
-    private val onItemClick: (RecyclerItem) -> Unit // Callback function for item click events
+    private val outfitList: MutableList<RecyclerItem>, // List of outfit items to display
+    private val onItemClick: (RecyclerItem, position: Int) -> Unit // Callback function for item click events
 ) : RecyclerView.Adapter<GalleryAdapter.GalleryViewHolder>() {
 
     private var selectedPosition = RecyclerView.NO_POSITION // Track the currently selected position
@@ -31,6 +31,11 @@ class GalleryAdapter(
     // Return the total number of items in the list
     override fun getItemCount() = outfitList.size
 
+    fun deleteItem(i : Int){
+        outfitList.removeAt(i)
+        notifyDataSetChanged()
+    }
+
     // Inner class representing the view holder for each item
     inner class GalleryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val titleImage: ImageView = itemView.findViewById(R.id.outfitImage)
@@ -42,7 +47,7 @@ class GalleryAdapter(
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     selectedPosition = position
-                    onItemClick(outfitList[position]) // Invoke the item click callback
+                    onItemClick(outfitList[position], position) // Invoke the item click callback
                     notifyDataSetChanged() // Update the view to reflect the selection change
                 }
             }

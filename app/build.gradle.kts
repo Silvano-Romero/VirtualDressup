@@ -40,6 +40,7 @@ android {
 }
 
 dependencies {
+    implementation ("it.xabaras.android:recyclerview-swipedecorator:1.4")
     implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")

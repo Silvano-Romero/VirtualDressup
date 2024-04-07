@@ -401,13 +401,14 @@ class ReveryAIClient {
         try {
             // Make request to process_new_model endpoint.
             val response = api.uploadSpecificModel(publicKey, oneTimeCode, timestamp, model)
-
             // Handle response, return garmentId returned from revery
             if (response.isSuccessful) {
                 val responseBody = response.body()
                 if (responseBody != null) {
                     println(TAG + "Raw JSON Response: $responseBody")
+
                     modelId = responseBody.asJsonObject.get("model_id").asString
+                    println("MODELIDCHECK:" + modelId )
 
                     return modelId
                 } else {
@@ -470,6 +471,31 @@ class ReveryAIClient {
         )
     }
 
+    suspend fun getSelectedModels(gender: String): GetModels {
+        try {
+            // Make request to get_selected_models endpoint.
+            val response = api.getModelsList(publicKey, oneTimeCode, timestamp, gender)
 
+            // Handle response, return Models returned from revery
+            if (response.isSuccessful) {
+                val responseBody = response.body()
+                if (responseBody != null) {
+                    println(TAG + "Raw JSON Response: $responseBody")
+                    val models: GetModels = gson.fromJson(responseBody, GetModels::class.java)
+                    println(TAG + models)
+
+                    return models
+                } else {
+                    println(TAG + "Response body is null.")
+                }
+            } else {
+                println(TAG + "API request failed with status code: ${response.code()}")
+            }
+        } catch (e: Exception) {
+            println(TAG + "Error fetching data: ${e.message}")
+        }
+
+        return GetModels()
+    }
 }
 

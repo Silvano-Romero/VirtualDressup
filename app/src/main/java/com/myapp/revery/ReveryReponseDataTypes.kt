@@ -105,3 +105,10 @@ data class ModelToUpload(
     val model_img_url: String,
     val standardized: Boolean
 )
+
+@Serializable
+data class GetModels(
+    val model_ids: List<String>,
+    val uploaded_model_ids: List<String>,
+    val success : Boolean
+){ constructor() : this(emptyList(), emptyList(), false)}
