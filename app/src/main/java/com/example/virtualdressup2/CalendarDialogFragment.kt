@@ -6,12 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.virtualdressup2.databinding.FragmentCalendarDialogBinding
 import com.google.firebase.auth.FirebaseAuth
-import com.myapp.firebase.DAO
-import com.myapp.firebase.YourDAO
-import kotlinx.coroutines.runBlocking
+import com.myapp.firebase.Avatar
+import com.myapp.firebase.revery.AvatarDAO
+import kotlinx.coroutines.launch
 
 // This interface defines a contract for handling item click events in the RecyclerView
 interface OnItemClickListener {
@@ -23,14 +24,7 @@ class CalendarDialogFragment : DialogFragment() {
     private val binding get() = _binding!!
 
     // List of outfits to display in the RecyclerView
-    private val outfitList = arrayListOf(
-        RecyclerItem(R.drawable.outfit1, "Outfit 1"),
-        RecyclerItem(R.drawable.outfit2, "Outfit 2"),
-        RecyclerItem(R.drawable.outfit3, "Outfit 3"),
-        RecyclerItem(R.drawable.outfit4, "Outfit 4"),
-        RecyclerItem(R.drawable.outfit5, "Outfit 5"),
-        RecyclerItem(R.drawable.outfit6, "Outfit 6")
-    )
+    private val outfitList = mutableListOf<RecyclerItem>()
 
     // Inflate the layout for the dialog fragment
     override fun onCreateView(
@@ -42,6 +36,7 @@ class CalendarDialogFragment : DialogFragment() {
         return binding.root
     }
 
+    // Initialize the RecyclerView and set up event listeners
     // Initialize the RecyclerView and set up event listeners
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -55,36 +50,7 @@ class CalendarDialogFragment : DialogFragment() {
         binding.submitButton.setOnClickListener {
             val selectedOutfit = getSelectedOutfit()
             if (selectedOutfit != null) {
-                // Create a map representing the outfit data
-                val outfitData = hashMapOf(
-                    "imageResource" to selectedOutfit.titleImage,
-                    "heading" to selectedOutfit.heading
-                )
-
-                // Instantiate your DAO class
-                val dao = YourDAO()
-                val user = FirebaseAuth.getInstance().currentUser
-                val userId = user?.uid
-
-
-                // Call the method to write the outfit data to your Firestore collection
-                try {
-                    runBlocking {
-                        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: "default_user_id"
-                        dao.writeDocumentToCollection("Profiles", userId, outfitData)
-                    }
-                    Toast.makeText(
-                        context,
-                        "Outfit stored successfully",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } catch (e: Exception) {
-                    Toast.makeText(
-                        context,
-                        "Error storing outfit: ${e.message}",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+                // Handle submitting the selected outfit (code not provided)
             } else {
                 Toast.makeText(context, "Please select an outfit", Toast.LENGTH_SHORT).show()
             }
@@ -92,10 +58,26 @@ class CalendarDialogFragment : DialogFragment() {
 
         // Set up the RecyclerView with a LinearLayoutManager
         binding.outfitRecyclerView.layoutManager = LinearLayoutManager(context)
-        // Create an adapter for the RecyclerView and set the item click listener
-        val adapter = OutfitAdapter(outfitList) { onItemClick(it) }
-        binding.outfitRecyclerView.adapter = adapter
+
+        // Use lifecycle scope to launch a coroutine
+        viewLifecycleOwner.lifecycleScope.launch {
+            // Fetch avatar outfits from Firebase and populate the outfitList
+            val avatarID = "Avatar01"
+            val profileID = "YHd6kmErjjgSoQr9QxgIwA0sUGW2"
+            val avatar: Avatar = AvatarDAO().getSpecificAvatarFromProfile(profileID, avatarID)
+            val avatarOutfits = avatar.outfits
+
+            // Add outfits to outfitList
+            for (outfit in avatarOutfits) {
+                outfitList.add(RecyclerItem(R.drawable.female1, outfit.outfitID))
+            }
+
+            // Create an adapter for the RecyclerView and set the item click listener
+            val adapter = OutfitAdapter(outfitList) { onItemClick(it) }
+            binding.outfitRecyclerView.adapter = adapter
+        }
     }
+
 
     // Clean up references to views when the fragment is destroyed
     override fun onDestroyView() {
@@ -105,7 +87,7 @@ class CalendarDialogFragment : DialogFragment() {
 
     // Handle item click event from the RecyclerView
     private fun onItemClick(outfit: RecyclerItem) {
-        Toast.makeText(context, "Selected outfit: ${outfit.heading}", Toast.LENGTH_SHORT).show()
+//        Toast.makeText(context, "Selected outfit: ${outfit.outfitID}", Toast.LENGTH_SHORT).show()
     }
 
     // Get the selected outfit from the RecyclerView
