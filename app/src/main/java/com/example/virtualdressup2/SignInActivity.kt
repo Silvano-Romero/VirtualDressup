@@ -22,48 +22,57 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import com.myapp.revery.ReveryAIClient
 import com.myapp.revery.ReveryAIConstants
-fun getGarments(){
-    GlobalScope.launch(Dispatchers.IO) {
-        val reveryClient = ReveryAIClient()
-        reveryClient.getFilteredGarments()
+//fun getGarments(){
+//    GlobalScope.launch(Dispatchers.IO) {
+//        // Initialize revery AI client
+//        val reveryClient = ReveryAIClient()
+//        // Fetch Filtered Garments
+//        reveryClient.getFilteredGarments()
+//
+//        // Fetch models for female and male genders
+//        val female = reveryClient.getModels(ReveryAIConstants.FEMALE)
+//        val gender = reveryClient.getModels(ReveryAIConstants.MALE)
+//
+//        //println(AvatarDAO().getSpecificAvatar("Avatar"))
+//        // Delete a specific garment and print the ID of the deleted garment
+//        val deletedGarmentId = reveryClient.garmentToDelete(
+//            GarmentToDelete(
+//                garment_id = "7047a79ff16b3393b5b2ff4d35ac8b8e_l8Ix91bkol94"
+//            )
+//        )
+//        println("GARMENT_ID" + deletedGarmentId)
+//        reveryClient.getFilteredGarments()
+//        // Fetch details of a specific garment using its ID
+//        reveryClient.getSpecificGarment("7047a79ff16b3393b5b2ff4d35ac8b8e_l8Ix91bkol94")
+//
+//        // Upload a new garment and print its ID
+//        val garmentID = reveryClient.uploadGarment(
+//            GarmentToUpload(
+//                category = ReveryAIConstants.TOPS,
+//                gender = ReveryAIConstants.MALE,
+//                garment_img_url = "https://revery-integration-tools.s3.us-east-2.amazonaws.com/API_website/tops.jpeg",
+//            )
+//        )
+//        println("GARMENT_ID_UPLOADED " + garmentID)
+//        reveryClient.getSpecificGarment(garmentID)
 
-
-        val female = reveryClient.getModels(ReveryAIConstants.FEMALE)
-        val gender = reveryClient.getModels(ReveryAIConstants.MALE)
-
-        //println(AvatarDAO().getSpecificAvatar("Avatar"))
-        val deletedGarmentId = reveryClient.garmentToDelete(
-            GarmentToDelete(
-                garment_id = "7047a79ff16b3393b5b2ff4d35ac8b8e_l8Ix91bkol94"
-            )
-        )
-        println("GARMENT_ID" + deletedGarmentId)
-        reveryClient.getFilteredGarments()
-        reveryClient.getSpecificGarment("7047a79ff16b3393b5b2ff4d35ac8b8e_l8Ix91bkol94")
-        val garmentID = reveryClient.uploadGarment(
-            GarmentToUpload(
-                category = ReveryAIConstants.TOPS,
-                gender = ReveryAIConstants.MALE,
-                garment_img_url = "https://revery-integration-tools.s3.us-east-2.amazonaws.com/API_website/tops.jpeg",
-            )
-        )
-        println("GARMENT_ID_UPLOADED " + garmentID)
-        reveryClient.getSpecificGarment(garmentID)
-
+//        // Creates map of Garments to pass for Avatar TryOnResponse
 //        val garments = mapOf(
 //            "tops" to "7047a79ff16b3393b5b2ff4d35ac8b8e_z52g6siOWP6A",
 //            "bottoms" to "7047a79ff16b3393b5b2ff4d35ac8b8e_VbcHFMmOfzey"
 //        )
+//         // Makes API requestTryOn with provided parameters
 //        val tryOnResponse = reveryClient.requestTryOn(garments, "d79b5e0a1b2fd3817da7c3a26005b4b0", null, "white", false)
 //
+//        // Provides available list of male and female Avatars and success response
 //        println("male111: " + gender)
 //        println("female: " + female)
 //        println("Try-On Response: $tryOnResponse")
 //        println("TEST... " + tryOnResponse)
+//
 
-
-        reveryClient.getModels(ReveryAIConstants.FEMALE)
-        reveryClient.getModels(ReveryAIConstants.MALE)
+//        reveryClient.getModels(ReveryAIConstants.FEMALE)
+//        reveryClient.getModels(ReveryAIConstants.MALE)
 
 //        val uploadModelID = reveryClient.uploadModel(
 //            ModelToUpload(
@@ -144,8 +153,8 @@ fun getGarments(){
 //        println("GARMENT_ID_UPLOADED" + garmentID)
 //        reveryClient.getSpecificGarment(garmentID)
 // 78b5256d8f61705a2b07cd6092302ef1953ba621
-    }
-}
+//    }
+//}
 
 // Declaration of the SignInActivity class which extends AppCompatActivity
 class SignInActivity : AppCompatActivity() {
@@ -159,7 +168,7 @@ class SignInActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         // Get filtered garments at once SignIn page is rendered. This can be removed only here
         // for test purposes and demo.
-        getGarments()
+        //getGarments()
 
         // Inflating the layout using view binding
         binding = ActivitySignInBinding.inflate(layoutInflater)

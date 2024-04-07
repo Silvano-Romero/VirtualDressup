@@ -19,6 +19,7 @@ class OutfitAdapter(
     constructor() : this(emptyList(), {})
 
     private var selectedPosition = RecyclerView.NO_POSITION // Initially no item selected
+    var onShareClick: (RecyclerItem) -> Unit = {} // Share button click listener
 
     private var outfits: List<Garment> = listOf() // List of garments
 
@@ -98,3 +99,11 @@ class OutfitAdapter(
         }
     }
 }
+
+// Add extension function to OutfitAdapter
+fun OutfitAdapter.addShareButtonFunctionality(onShareClick: (RecyclerItem) -> Unit) {
+    this.onShareClick = onShareClick
+}
+
+// Add a share button click listener
+private var onShareClick: (RecyclerItem) -> Unit = {}

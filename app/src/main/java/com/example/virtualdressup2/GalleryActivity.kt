@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 // Activity class to display a gallery of outfits
 class GalleryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGalleryBinding
+    private lateinit var adapter: GalleryAdapter
 
     // List of outfits to display in the gallery
     private val outfitList = arrayListOf(
@@ -30,6 +31,8 @@ class GalleryActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityGalleryBinding.inflate(layoutInflater) // Initialize binding property
+        setContentView(binding.root)
         val outfitList = mutableListOf<RecyclerItem>()
 
         lifecycleScope.launch {
@@ -47,8 +50,8 @@ class GalleryActivity : AppCompatActivity() {
             }
 
             // Inflate the layout using view binding
-            binding = ActivityGalleryBinding.inflate(layoutInflater)
-            setContentView(binding.root)
+//            binding = ActivityGalleryBinding.inflate(layoutInflater)
+//            setContentView(binding.root)
 
             // Set up click listener for the back button to navigate to the main activity
             binding.backButton.setOnClickListener() {
@@ -63,7 +66,7 @@ class GalleryActivity : AppCompatActivity() {
             binding.galleryRecyclerView.layoutManager = layoutManager
 
             // Create an instance of GalleryAdapter and pass in the outfitList and item click listener
-            val adapter = GalleryAdapter(outfitList) { _, position ->
+            adapter = GalleryAdapter(outfitList) { _, position ->
                 // Display a toast message indicating the clicked outfit
                 Toast.makeText(
                     this@GalleryActivity,
@@ -73,6 +76,7 @@ class GalleryActivity : AppCompatActivity() {
             }
             // Set the adapter for the RecyclerView
             binding.galleryRecyclerView.adapter = adapter
+
 
             // Set up click listener for the back button to navigate to the main activity
             binding.backButton.setOnClickListener() {
@@ -98,6 +102,31 @@ class GalleryActivity : AppCompatActivity() {
             }
             val touchHelper = ItemTouchHelper(swipetoDeleteCallback)
             touchHelper.attachToRecyclerView(binding.galleryRecyclerView)
+        }
+
+        // Set up click listener for the share button to share outfit details
+        binding.shareButton.setOnClickListener {
+            // Get the selected outfit position from the adapter
+            val selectedPosition = adapter.selectedPosition
+
+            // Check if a valid outfit is selected
+            if (selectedPosition != RecyclerView.NO_POSITION) {
+                // Get the outfit details from the adapter
+                val selectedOutfit = outfitList[selectedPosition]
+
+                // Create a share intent with outfit details
+                val shareIntent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, "Outfit Details: ${selectedOutfit.heading}")
+                    type = "text/plain"
+                }
+
+                // Start the activity to share the outfit details
+                startActivity(Intent.createChooser(shareIntent, "Share Outfit Details"))
+            } else {
+                // Show a message if no outfit is selected
+                Toast.makeText(this@GalleryActivity, "Please select an outfit to share", Toast.LENGTH_SHORT).show()
+            }
         }
 
 

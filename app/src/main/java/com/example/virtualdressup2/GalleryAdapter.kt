@@ -13,7 +13,7 @@ class GalleryAdapter(
     private val onItemClick: (RecyclerItem, position: Int) -> Unit // Callback function for item click events
 ) : RecyclerView.Adapter<GalleryAdapter.GalleryViewHolder>() {
 
-    private var selectedPosition = RecyclerView.NO_POSITION // Track the currently selected position
+    var selectedPosition = RecyclerView.NO_POSITION // Track the currently selected position
 
     // Create a new view holder when needed
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GalleryViewHolder {
@@ -30,6 +30,13 @@ class GalleryAdapter(
 
     // Return the total number of items in the list
     override fun getItemCount() = outfitList.size
+
+    // Update onItemClick to store the selected position
+    private fun onItemClick(position: Int) {
+        // Store the selected position
+        selectedPosition = position
+        notifyDataSetChanged() // Notify adapter of data changes
+    }
 
     fun deleteItem(i : Int){
         outfitList.removeAt(i)
