@@ -43,7 +43,7 @@ class GalleryActivity : AppCompatActivity() {
 
             // Add outfits to outfitList
             for (outfit in avatarOutfits) {
-                outfitList.add(RecyclerItem(R.drawable.outfit1, outfit.outfitID))
+                outfitList.add(RecyclerItem(R.drawable.female1, outfit.outfitID))
             }
 
             // Inflate the layout using view binding

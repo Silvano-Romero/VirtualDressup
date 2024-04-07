@@ -3,6 +3,7 @@ package com.example.virtualdressup2
 // SelectOutfitActivity.kt
 
 import android.os.Bundle
+import android.text.TextUtils.replace
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -62,6 +63,9 @@ class SelectOutfitActivity : AppCompatActivity() {
             // Save the selected outfit
             saveSelectedOutfit()
         }
+
+        // Display TryOnFragment
+        supportFragmentManager.beginTransaction().replace(R.id.tryOnFragmentContainer, TryOnFragment()).commit()
     }
 
     private fun fetchAndDisplayOutfit() {

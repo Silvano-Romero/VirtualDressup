@@ -23,4 +23,9 @@
         android:layout_centerHorizontal="true"
         android:text="Save Outfit" />
 
+    <FrameLayout
+        android:id="@+id/tryOnFragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/recyclerViewOutfits" />
 </RelativeLayout>
