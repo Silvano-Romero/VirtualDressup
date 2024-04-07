@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 // Adapter class for populating a RecyclerView with outfit items
 class GalleryAdapter(
-    private val outfitList: List<RecyclerItem>, // List of outfit items to display
+    private val outfitList: MutableList<RecyclerItem>, // List of outfit items to display
     private val onItemClick: (RecyclerItem) -> Unit // Callback function for item click events
 ) : RecyclerView.Adapter<GalleryAdapter.GalleryViewHolder>() {
 
@@ -30,6 +30,11 @@ class GalleryAdapter(
 
     // Return the total number of items in the list
     override fun getItemCount() = outfitList.size
+
+    fun deleteItem(i : Int){
+        outfitList.removeAt(i)
+        notifyDataSetChanged()
+    }
 
     // Inner class representing the view holder for each item
     inner class GalleryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

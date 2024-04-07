@@ -1,10 +1,13 @@
 package com.example.virtualdressup2
 
+import android.content.ClipData.Item
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.example.virtualdressup2.databinding.ActivityGalleryBinding
 
 // Activity class to display a gallery of outfits
@@ -28,7 +31,7 @@ class GalleryActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Set up click listener for the back button to navigate to the main activity
-        binding.backButton.setOnClickListener(){
+        binding.backButton.setOnClickListener() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
@@ -43,7 +46,25 @@ class GalleryActivity : AppCompatActivity() {
 
         // Set the adapter for the RecyclerView
         binding.galleryRecyclerView.adapter = adapter
+
+        val swipetoDeleteCallback = object : SwipetoDeleteCallback(this) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                when (direction) {
+                    ItemTouchHelper.LEFT -> {
+                        adapter.deleteItem(viewHolder.adapterPosition)
+                    }
+
+                    ItemTouchHelper.RIGHT -> {
+
+                    }
+                }
+            }
+        }
+        val touchHelper = ItemTouchHelper(swipetoDeleteCallback)
+        touchHelper.attachToRecyclerView(binding.galleryRecyclerView)
+
     }
+
 
     // Function to handle item click events in the RecyclerView
     private fun onItemClick(position: RecyclerItem) {

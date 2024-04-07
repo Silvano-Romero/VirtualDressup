@@ -5,4 +5,5 @@
     <color name="app_background_color">#8febfb</color>
     <color name="cool_blue">#10648C </color>
     <color name="grey">#ABB2B9 </color>
+    <color name="deleteColor">#E91404</color>
 </resources>
