@@ -49,16 +49,16 @@ fun getGarments(){
         println("GARMENT_ID_UPLOADED " + garmentID)
         reveryClient.getSpecificGarment(garmentID)
 
-        val garments = mapOf(
-            "tops" to "7047a79ff16b3393b5b2ff4d35ac8b8e_z52g6siOWP6A",
-            "bottoms" to "7047a79ff16b3393b5b2ff4d35ac8b8e_VbcHFMmOfzey"
-        )
-        val tryOnResponse = reveryClient.requestTryOn(garments, "d79b5e0a1b2fd3817da7c3a26005b4b0", null, "white", false)
-
-        println("male111: " + gender)
-        println("female: " + female)
-        println("Try-On Response: $tryOnResponse")
-        println("TEST... " + tryOnResponse)
+//        val garments = mapOf(
+//            "tops" to "7047a79ff16b3393b5b2ff4d35ac8b8e_z52g6siOWP6A",
+//            "bottoms" to "7047a79ff16b3393b5b2ff4d35ac8b8e_VbcHFMmOfzey"
+//        )
+//        val tryOnResponse = reveryClient.requestTryOn(garments, "d79b5e0a1b2fd3817da7c3a26005b4b0", null, "white", false)
+//
+//        println("male111: " + gender)
+//        println("female: " + female)
+//        println("Try-On Response: $tryOnResponse")
+//        println("TEST... " + tryOnResponse)
 
         reveryClient.getModels(ReveryAIConstants.FEMALE)
         reveryClient.getModels(ReveryAIConstants.MALE)
