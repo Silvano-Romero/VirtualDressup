@@ -37,7 +37,6 @@ class CalendarDialogFragment : DialogFragment() {
     }
 
     // Initialize the RecyclerView and set up event listeners
-    // Initialize the RecyclerView and set up event listeners
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -61,23 +60,30 @@ class CalendarDialogFragment : DialogFragment() {
 
         // Use lifecycle scope to launch a coroutine
         viewLifecycleOwner.lifecycleScope.launch {
-            // Fetch avatar outfits from Firebase and populate the outfitList
-            val avatarID = "Avatar01"
-            val profileID = "YHd6kmErjjgSoQr9QxgIwA0sUGW2"
-            val avatar: Avatar = AvatarDAO().getSpecificAvatarFromProfile(profileID, avatarID)
-            val avatarOutfits = avatar.outfits
+            try {
+                // Fetch avatar outfits from Firebase and populate the outfitList
+                val avatarID = "Avatar01"
+                val profileID = "YHd6kmErjjgSoQr9QxgIwA0sUGW2"
+                val avatar: Avatar = AvatarDAO().getSpecificAvatarFromProfile(profileID, avatarID)
+                val avatarOutfits = avatar.outfits
 
-            // Add outfits to outfitList
-            for (outfit in avatarOutfits) {
-                outfitList.add(RecyclerItem(R.drawable.female1, outfit.outfitID))
+                // Map outfits to RecyclerItems
+                val recyclerItems = avatarOutfits.map { outfit ->
+                    RecyclerItem(R.drawable.female1, outfit.outfitID)
+                }
+
+                // Add all recyclerItems to outfitList at once
+                outfitList.addAll(recyclerItems)
+
+                // Create an adapter for the RecyclerView and set the item click listener
+                val adapter = OutfitAdapter(outfitList) { onItemClick(it) }
+                binding.outfitRecyclerView.adapter = adapter
+            } catch (e: Exception) {
+                // Handle error (e.g., show error message)
+                Toast.makeText(context, "Error loading outfits: ${e.message}", Toast.LENGTH_SHORT).show()
             }
-
-            // Create an adapter for the RecyclerView and set the item click listener
-            val adapter = OutfitAdapter(outfitList) { onItemClick(it) }
-            binding.outfitRecyclerView.adapter = adapter
         }
     }
-
 
     // Clean up references to views when the fragment is destroyed
     override fun onDestroyView() {
@@ -87,7 +93,7 @@ class CalendarDialogFragment : DialogFragment() {
 
     // Handle item click event from the RecyclerView
     private fun onItemClick(outfit: RecyclerItem) {
-//        Toast.makeText(context, "Selected outfit: ${outfit.outfitID}", Toast.LENGTH_SHORT).show()
+        // Handle item click event as needed
     }
 
     // Get the selected outfit from the RecyclerView
