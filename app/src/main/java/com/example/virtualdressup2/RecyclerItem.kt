@@ -8,4 +8,5 @@ data class RecyclerItem(
     val gender: String? = null,
     val category: String? = null,
     val modelID: String? = null,
+    val titleImageURL: String? = null,
 )

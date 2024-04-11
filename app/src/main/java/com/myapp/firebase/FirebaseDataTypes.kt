@@ -10,4 +10,5 @@ data class Outfit(
     val outfitID: String,
     val top: String,
     val bottom: String,
-){constructor() : this("", "","")}
+    val modelFile: String?,
+){constructor() : this("", "","", "")}

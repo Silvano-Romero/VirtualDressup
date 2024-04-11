@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 
 // Adapter class for populating a RecyclerView with outfit items
 class GalleryAdapter(
@@ -24,7 +25,7 @@ class GalleryAdapter(
     // Bind data to the view holder
     override fun onBindViewHolder(holder: GalleryViewHolder, position: Int) {
         val currentItem = outfitList[position]
-        holder.bind(currentItem)
+        holder.bindWithImageURL(currentItem)
         holder.itemView.isSelected = position == selectedPosition // Highlight the selected item
     }
 
@@ -63,6 +64,11 @@ class GalleryAdapter(
         // Bind outfit data to the views
         fun bind(outfit: RecyclerItem) {
             titleImage.setImageResource(outfit.titleImage)
+            tvHeading.text = outfit.heading
+        }
+        fun bindWithImageURL(outfit: RecyclerItem) {
+            // Set view to urlImage
+            Picasso.get().load(outfit.titleImageURL).into(titleImage)
             tvHeading.text = outfit.heading
         }
     }

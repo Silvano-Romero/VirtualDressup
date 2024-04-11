@@ -46,7 +46,9 @@ class GalleryActivity : AppCompatActivity() {
 
             // Add outfits to outfitList
             for (outfit in avatarOutfits) {
-                outfitList.add(RecyclerItem(R.drawable.female1, outfit.outfitID))
+                val tryOnImgURL = "https://media.revery.ai/generated_model_image/d79b5e0a1b2fd3817da7c3a26005b4b0;${outfit.modelFile};17124436897514586.png"
+                //outfitList.add(RecyclerItem(R.drawable.outfit1, outfit.outfitID, titleImageURL = tryOnImgURL))
+                outfitList.add(RecyclerItem(R.drawable.outfit1, outfit.outfitID, titleImageURL = outfit.modelFile))
             }
 
             // Inflate the layout using view binding

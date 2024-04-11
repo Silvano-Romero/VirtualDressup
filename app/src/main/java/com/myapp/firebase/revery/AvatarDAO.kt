@@ -30,6 +30,7 @@ class AvatarDAO : DAO() {
                 if (!avatarsSnapshot.isEmpty) {
                     // Iterate through all avatars and create avatar object
                     for (avatar in avatarsSnapshot.documents) {
+                        println("OUTFIT: $avatar")
                         var outfitsList: MutableList<Outfit> = mutableListOf()
                         avatarID = avatar.id
                         val outfitsRef = avatar.reference.collection(outfitsSubCollectionName)
@@ -38,10 +39,13 @@ class AvatarDAO : DAO() {
                         // Gather all the outfits for each avatar and create outfit object
                         if (!outfitsSnapshot.isEmpty) {
                             for (outfit in outfitsSnapshot.documents) {
+                                println("OUTFIT: $outfit")
                                 val outfitID = outfit.id
                                 val bottomGarmentID: String  = outfit.getString("Bottom") as String
                                 val topGarmentID: String = outfit.getString("Top") as String
-                                outfitsList.add(Outfit(outfitID, topGarmentID, bottomGarmentID))
+                                val modelFile: String = outfit.getString("ModelFile") as String
+                                println("ModelFILE = $modelFile")
+                                outfitsList.add(Outfit(outfitID, topGarmentID, bottomGarmentID, modelFile))
                             }
                         } else {
                             println("No documents found in the outfits.")
@@ -95,6 +99,7 @@ class AvatarDAO : DAO() {
                 .set(mapOf(
                     "Top" to outfit.top,
                     "Bottom" to outfit.bottom,
+                    "ModelFile" to outfit.modelFile
                     ))
         }
     }
@@ -109,6 +114,7 @@ class AvatarDAO : DAO() {
             .set(mapOf(
                 "Top" to outfit.top,
                 "Bottom" to outfit.bottom,
+                "ModelFile" to outfit.modelFile
             ))
     }
 }
