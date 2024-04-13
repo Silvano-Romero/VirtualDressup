@@ -1,52 +1,58 @@
 package com.example.virtualdressup2
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.widget.CalendarView
-import android.widget.EditText
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+// CalendarActivity.kt
 
-class CalendarActivity : AppCompatActivity() {
-    // Declare properties for views and data
-    private lateinit var calendarView: CalendarView
-    private lateinit var fabAdd: FloatingActionButton
-    private lateinit var fabDelete: FloatingActionButton
-    private lateinit var fabBack: FloatingActionButton
-    private lateinit var stringDateSelected: String
+import android.os.Bundle
+import android.view.View
+import android.widget.CalendarView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.example.virtualdressup2.databinding.ActivityCalendarBinding
+import com.squareup.picasso.Picasso
+
+class CalendarActivity : AppCompatActivity(), CalendarDialogFragment.OnOutfitSelectedListener {
+    private lateinit var binding: ActivityCalendarBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_calendar) // Set the layout for this activity
+        binding = ActivityCalendarBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        // Initialize views by finding their corresponding views in the layout
-        calendarView = findViewById(R.id.calendarView)
-        fabAdd = findViewById(R.id.fab_add)
-        fabDelete = findViewById(R.id.fab_delete)
-        fabBack = findViewById(R.id.backButton)
-
-        // Set click listener for the back button to navigate to the MainActivity
-        fabBack.setOnClickListener(){
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
+        binding.calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
+            val selectedDate = "$year-${month + 1}-$dayOfMonth"
+            Toast.makeText(this, "Selected date: $selectedDate", Toast.LENGTH_SHORT).show()
+            // Optionally, you can pass the selected date to the dialog fragment
+            // to perform specific actions based on the date.
         }
 
-        // Set a listener to detect date changes in the calendar view
-        calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
-            stringDateSelected = "$year${month + 1}$dayOfMonth"
+        binding.fabAdd.setOnClickListener {
+            val dialog = CalendarDialogFragment()
+            dialog.outfitSelectedListener = this
+            dialog.show(supportFragmentManager, "calendarDialog")
         }
 
-        // Set click listener for the "Add" floating action button
-        fabAdd.setOnClickListener {
-            // When clicked, create and show a CalendarDialogFragment to add data
-            var dialog = CalendarDialogFragment()
-            dialog.show(supportFragmentManager, "calenderDialog")
-        }
+        // Other initialization code...
+    }
 
-        // Set click listener for the "Delete" floating action button
-        fabDelete.setOnClickListener {
-            // Placeholder for handling delete action, not implemented in this code snippet
-        }
+    override fun onOutfitSelected(outfit: RecyclerItem) {
+        // Handle the selected outfit here
+        Toast.makeText(this, "Selected outfit: ${outfit.modelID}", Toast.LENGTH_SHORT).show()
+        // You can perform any actions you want with the selected outfit
+        // For example, display it in the activity
+        displaySelectedOutfit(outfit)
+    }
+
+    private fun displaySelectedOutfit(outfit: RecyclerItem) {
+        // Update the UI to display the selected outfit details or image
+        // For example, if you have an ImageView to display the outfit image:
+        binding.outfitImageView.visibility = View.VISIBLE
+        bindWithImageURL(outfit)
+    }
+
+    private fun bindWithImageURL(outfit: RecyclerItem) {
+        // Set view to urlImage
+        Picasso.get().load(outfit.titleImageURL).into(binding.outfitImageView)
     }
 }
+
+

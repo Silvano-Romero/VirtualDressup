@@ -1,5 +1,8 @@
 package com.example.virtualdressup2
 
+// CalendarDialogFragment.kt
+
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,19 +17,19 @@ import com.myapp.firebase.Avatar
 import com.myapp.firebase.revery.AvatarDAO
 import kotlinx.coroutines.launch
 
-// This interface defines a contract for handling item click events in the RecyclerView
-interface OnItemClickListener {
-    fun onItemClick(outfit: RecyclerItem)
-}
-
 class CalendarDialogFragment : DialogFragment() {
     private var _binding: FragmentCalendarDialogBinding? = null
     private val binding get() = _binding!!
-
-    // List of outfits to display in the RecyclerView
     private val outfitList = mutableListOf<RecyclerItem>()
 
-    // Inflate the layout for the dialog fragment
+    // Callback interface for outfit selection
+    interface OnOutfitSelectedListener {
+        fun onOutfitSelected(outfit: RecyclerItem)
+    }
+
+    // Listener for outfit selection
+    var outfitSelectedListener: OnOutfitSelectedListener? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -36,67 +39,56 @@ class CalendarDialogFragment : DialogFragment() {
         return binding.root
     }
 
-    // Initialize the RecyclerView and set up event listeners
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Set click listener for the cancel button to dismiss the dialog
         binding.cancelButton.setOnClickListener {
             dismiss()
         }
 
-        // Set click listener for the submit button to display the selected outfit
         binding.submitButton.setOnClickListener {
             val selectedOutfit = getSelectedOutfit()
             if (selectedOutfit != null) {
-                // Handle submitting the selected outfit (code not provided)
+                // Notify the listener about the selected outfit
+                outfitSelectedListener?.onOutfitSelected(selectedOutfit)
+                dismiss()
             } else {
                 Toast.makeText(context, "Please select an outfit", Toast.LENGTH_SHORT).show()
             }
         }
 
-        // Set up the RecyclerView with a LinearLayoutManager
         binding.outfitRecyclerView.layoutManager = LinearLayoutManager(context)
 
-        // Use lifecycle scope to launch a coroutine
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                // Fetch avatar outfits from Firebase and populate the outfitList
                 val avatarID = "Avatar01"
                 val profileID = "YHd6kmErjjgSoQr9QxgIwA0sUGW2"
                 val avatar: Avatar = AvatarDAO().getSpecificAvatarFromProfile(profileID, avatarID)
                 val avatarOutfits = avatar.outfits
 
-                // Map outfits to RecyclerItems
-                val recyclerItems = avatarOutfits.map { outfit ->
-                    RecyclerItem(R.drawable.female1, outfit.outfitID)
+                for (outfit in avatarOutfits) {
+                    val tryOnImgURL = "https://media.revery.ai/generated_model_image/d79b5e0a1b2fd3817da7c3a26005b4b0;${outfit.modelFile};17124436897514586.png"
+                    outfitList.add(RecyclerItem(R.drawable.outfit1, outfit.outfitID, titleImageURL = outfit.modelFile))
                 }
 
-                // Add all recyclerItems to outfitList at once
-                outfitList.addAll(recyclerItems)
-
-                // Create an adapter for the RecyclerView and set the item click listener
                 val adapter = OutfitAdapter(outfitList) { onItemClick(it) }
                 binding.outfitRecyclerView.adapter = adapter
             } catch (e: Exception) {
-                // Handle error (e.g., show error message)
                 Toast.makeText(context, "Error loading outfits: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    // Clean up references to views when the fragment is destroyed
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
-    // Handle item click event from the RecyclerView
     private fun onItemClick(outfit: RecyclerItem) {
-        // Handle item click event as needed
+        // Pass the selected outfit back to the activity or fragment
+        outfitSelectedListener?.onOutfitSelected(outfit)
     }
 
-    // Get the selected outfit from the RecyclerView
     private fun getSelectedOutfit(): RecyclerItem? {
         val selectedPosition = (binding.outfitRecyclerView.layoutManager as LinearLayoutManager)
             .findFirstVisibleItemPosition()

@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.myapp.revery.Garment
+import com.squareup.picasso.Picasso
 
 
 class OutfitAdapter(
@@ -38,7 +39,7 @@ class OutfitAdapter(
     // Bind data to each item in the RecyclerView
     override fun onBindViewHolder(holder: OutfitViewHolder, position: Int) {
         val currentItem = outfitList[position]
-        holder.bind(currentItem)
+        holder.bindWithImageURL(currentItem)
 
         // Set click listener for the item
         holder.itemView.setOnClickListener {
@@ -61,6 +62,7 @@ class OutfitAdapter(
         } else {
             holder.itemView.setBackgroundColor(Color.TRANSPARENT)
         }
+
     }
 
 
@@ -97,7 +99,13 @@ class OutfitAdapter(
             titleImage.setImageResource(outfit.titleImage)
             tvHeading.text = outfit.heading
         }
+        fun bindWithImageURL(outfit: RecyclerItem) {
+            // Set view to urlImage
+            Picasso.get().load(outfit.titleImageURL).into(titleImage)
+            tvHeading.text = outfit.heading
+        }
     }
+
 }
 
 // Add extension function to OutfitAdapter
