@@ -12,3 +12,7 @@ data class Outfit(
     val bottom: String,
     val modelFile: String?,
 ){constructor() : this("", "","", "")}
+
+data class Calendar(
+    val outfitImageUrl: String,
+){constructor() : this("")}

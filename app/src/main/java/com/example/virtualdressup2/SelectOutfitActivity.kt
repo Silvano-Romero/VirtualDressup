@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.virtualdressup2.OutfitAdapter
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.myapp.firebase.users.UserDAO
 import com.myapp.revery.Garment
 import com.myapp.revery.ReveryAIClient
@@ -22,7 +23,7 @@ class SelectOutfitActivity : AppCompatActivity() {
     private lateinit var reveryAIClient: ReveryAIClient
     private lateinit var recyclerView: RecyclerView
     private lateinit var outfitAdapter: OutfitAdapter
-
+    private var mostRecentPosition: Int = 0
 
     // PLACEHOLDER ****
     private val outfitList = arrayListOf(
@@ -50,13 +51,17 @@ class SelectOutfitActivity : AppCompatActivity() {
         // Initialize RecyclerView and adapter
         recyclerView = findViewById(R.id.recyclerViewOutfits)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        outfitAdapter = OutfitAdapter(outfitList) { onItemClick(it)
-
+        outfitAdapter = OutfitAdapter(outfitList) { outfit, position ->
+            onItemClick(outfit)
         }
         recyclerView.adapter = outfitAdapter
 
         // Fetch and display initial outfit
         fetchAndDisplayOutfit()
+        // Set click listener for the back button
+        findViewById<FloatingActionButton>(R.id.backButton).setOnClickListener {
+            onBackPressed() // Simulate back button press
+        }
 
         // Set click listener for the "Save Outfit" button
         findViewById<Button>(R.id.buttonSave).setOnClickListener {
@@ -64,8 +69,12 @@ class SelectOutfitActivity : AppCompatActivity() {
             saveSelectedOutfit()
         }
 
+
+
         // Display TryOnFragment
         supportFragmentManager.beginTransaction().replace(R.id.tryOnFragmentContainer, TryOnFragment()).commit()
+
+
     }
 
     private fun fetchAndDisplayOutfit() {
@@ -82,16 +91,16 @@ class SelectOutfitActivity : AppCompatActivity() {
     }
 
     private fun saveSelectedOutfit() {
+        val selectedPosition = mostRecentPosition
         // Get the selected outfit from the adapter
-        val selectedOutfit = outfitAdapter.getSelectedOutfit()
+        val selectedOutfit = outfitAdapter.getItemAtPosition(mostRecentPosition)
 
         // Check if an outfit is selected
         if (selectedOutfit != null) {
             // Save the selected outfit to the database
             GlobalScope.launch(Dispatchers.IO) {
                 val userDAO = UserDAO()
-                val outfitId = selectedOutfit.id.toString()
-                userDAO.writeDocumentToCollection("outfits", outfitId, selectedOutfit)
+                userDAO.writeDocumentToCollection("outfits", selectedOutfit.heading, selectedOutfit)
                 // Display success message
                 runOnUiThread {
                     Toast.makeText(this@SelectOutfitActivity, "Outfit Saved", Toast.LENGTH_SHORT).show()
@@ -99,9 +108,10 @@ class SelectOutfitActivity : AppCompatActivity() {
             }
         } else {
             // Show an error message or handle the case where no outfit is selected
-            Toast.makeText(this@SelectOutfitActivity, "Outfit failed to save", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@SelectOutfitActivity, "Please select an outfit", Toast.LENGTH_SHORT).show()
         }
     }
+
 
     private fun onItemClick(position: RecyclerItem) {
         // Handle item click here

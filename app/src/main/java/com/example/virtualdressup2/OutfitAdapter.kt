@@ -1,5 +1,6 @@
 package com.example.virtualdressup2
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -12,12 +13,9 @@ import com.squareup.picasso.Picasso
 
 
 class OutfitAdapter(
-    private val outfitList: List<RecyclerItem>, // List of outfit items
-    private val onItemClick: (RecyclerItem) -> Unit // Lambda function to handle item click events
+    private var outfitList: List<RecyclerItem>,
+    private val onItemClick: (RecyclerItem, position: Int) -> Unit
 ) : RecyclerView.Adapter<OutfitAdapter.OutfitViewHolder>() {
-
-    // Secondary constructor to create an adapter with an empty list and lambda
-    constructor() : this(emptyList(), {})
 
     private var selectedPosition = RecyclerView.NO_POSITION // Initially no item selected
     var onShareClick: (RecyclerItem) -> Unit = {} // Share button click listener
@@ -30,6 +28,13 @@ class OutfitAdapter(
         notifyDataSetChanged() // Notify the adapter that data set has changed
     }
 
+    // Remove an item from the outfit list
+    fun removeItem(outfit: RecyclerItem) {
+        outfitList = outfitList.filterNot { it.modelID == outfit.modelID }
+        notifyDataSetChanged()
+    }
+
+
     // Create view holder for each item in the RecyclerView
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OutfitViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false)
@@ -37,24 +42,21 @@ class OutfitAdapter(
     }
 
     // Bind data to each item in the RecyclerView
-    override fun onBindViewHolder(holder: OutfitViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: OutfitViewHolder, @SuppressLint("RecyclerView") position: Int) {
         val currentItem = outfitList[position]
         holder.bindWithImageURL(currentItem)
 
         // Set click listener for the item
         holder.itemView.setOnClickListener {
-            // Clear the background color of the previously selected item
-            if (selectedPosition != RecyclerView.NO_POSITION) {
-                notifyItemChanged(selectedPosition)
-            }
-
-            // Update the selected position and background color
-            selectedPosition = holder.adapterPosition
-            it.setBackgroundColor(Color.GRAY)
-
-            // Notify any registered listeners about the item click
-            onItemClick(currentItem)
+            // Update the selected position and invoke onItemClick callback
+            selectedPosition = position
+            onItemClick(currentItem, position)
+            notifyDataSetChanged() // Update the view to reflect the selection change
         }
+
+        // Set background color based on the selected position
+        holder.itemView.isSelected = position == selectedPosition
+
 
         // Set background color based on the selected position
         if (selectedPosition == holder.adapterPosition) {
@@ -66,15 +68,6 @@ class OutfitAdapter(
     }
 
 
-    // Get the selected outfit
-    fun getSelectedOutfit(): Garment? {
-        return if (selectedPosition != RecyclerView.NO_POSITION) {
-            outfits[selectedPosition]
-        } else {
-            null
-        }
-    }
-
     // Return the total number of items in the list
     override fun getItemCount() = outfitList.size
 
@@ -82,27 +75,35 @@ class OutfitAdapter(
     inner class OutfitViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val titleImage: ImageView = itemView.findViewById(R.id.outfitImage)
         private val tvHeading: TextView = itemView.findViewById(R.id.outfitName)
-
         init {
-            // Set click listener for the item view
             itemView.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
-                    val item = outfitList[position]
-                    onItemClick(item) // Pass the clicked item to onItemClick lambda
+                    selectedPosition = position
+                    onItemClick(outfitList[position], position) // Invoke the item click callback
+                    notifyDataSetChanged() // Update the view to reflect the selection change
                 }
             }
         }
-
         // Bind data to the ViewHolder
         fun bind(outfit: RecyclerItem) {
-            titleImage.setImageResource(outfit.titleImage)
+            // Set view to urlImage
+            Picasso.get().load(outfit.titleImageURL).into(titleImage)
             tvHeading.text = outfit.heading
         }
         fun bindWithImageURL(outfit: RecyclerItem) {
             // Set view to urlImage
             Picasso.get().load(outfit.titleImageURL).into(titleImage)
             tvHeading.text = outfit.heading
+        }
+    }
+
+    // Function to get the selected outfit
+    fun getItemAtPosition(position: Int): RecyclerItem? {
+        return if (position != RecyclerView.NO_POSITION && position < outfitList.size) {
+            outfitList[position]
+        } else {
+            null
         }
     }
 

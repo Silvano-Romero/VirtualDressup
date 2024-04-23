@@ -1,7 +1,5 @@
 package com.example.virtualdressup2
 
-// CalendarDialogFragment.kt
-
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.virtualdressup2.databinding.FragmentCalendarDialogBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.myapp.firebase.Avatar
@@ -19,8 +18,11 @@ import kotlinx.coroutines.launch
 
 class CalendarDialogFragment : DialogFragment() {
     private var _binding: FragmentCalendarDialogBinding? = null
+    private lateinit var outfitAdapter: OutfitAdapter
+    private var mostRecentPosition: Int = 0
     private val binding get() = _binding!!
     private val outfitList = mutableListOf<RecyclerItem>()
+
 
     // Callback interface for outfit selection
     interface OnOutfitSelectedListener {
@@ -71,8 +73,18 @@ class CalendarDialogFragment : DialogFragment() {
                     outfitList.add(RecyclerItem(R.drawable.outfit1, outfit.outfitID, titleImageURL = outfit.modelFile))
                 }
 
-                val adapter = OutfitAdapter(outfitList) { onItemClick(it) }
-                binding.outfitRecyclerView.adapter = adapter
+                outfitAdapter = OutfitAdapter(outfitList) { outfit, position ->
+                    // Display a toast message indicating the clicked outfit's modelFile
+                    mostRecentPosition = position
+                    Toast.makeText(
+                        requireContext(),
+                        "Outfit: ${outfit.heading}\nModel File: ${outfit.titleImageURL}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+
+
+                binding.outfitRecyclerView.adapter = outfitAdapter
             } catch (e: Exception) {
                 Toast.makeText(context, "Error loading outfits: ${e.message}", Toast.LENGTH_SHORT).show()
             }
@@ -84,14 +96,12 @@ class CalendarDialogFragment : DialogFragment() {
         _binding = null
     }
 
-    private fun onItemClick(outfit: RecyclerItem) {
-        // Pass the selected outfit back to the activity or fragment
-        outfitSelectedListener?.onOutfitSelected(outfit)
+    private fun getSelectedOutfit(): RecyclerItem? {
+//        val layoutManager = binding.outfitRecyclerView.layoutManager as LinearLayoutManager
+        val selectedPosition = mostRecentPosition
+//        println("SELECTED_POSITION: $selectedPosition")
+        return outfitAdapter.getItemAtPosition(selectedPosition)
     }
 
-    private fun getSelectedOutfit(): RecyclerItem? {
-        val selectedPosition = (binding.outfitRecyclerView.layoutManager as LinearLayoutManager)
-            .findFirstVisibleItemPosition()
-        return outfitList.getOrNull(selectedPosition)
-    }
+
 }
