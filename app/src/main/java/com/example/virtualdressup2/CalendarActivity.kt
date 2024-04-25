@@ -56,17 +56,68 @@ class CalendarActivity : AppCompatActivity(), CalendarDialogFragment.OnOutfitSel
         }
 
         binding.fabDelete.setOnClickListener {
-            // Check if selectedOutfit is initialized
-            if (::selectedOutfit.isInitialized) {
-                // Call the removeItem function of the adapter to delete the outfit
-                outfitAdapter.removeItem(selectedOutfit)
-                // Optionally, perform any additional actions after deletion
-                // For example, hide the outfitImageView if needed
-                binding.outfitImageView.visibility = View.GONE
-            } else {
-                Toast.makeText(this, "No outfit selected to delete", Toast.LENGTH_SHORT).show()
+            // Check if selectedDate is not null
+            selectedDate?.let { date ->
+                // Query the "calendar" collection to check if the selected date exists
+                firestore.collection("calendar")
+                    .document(date)
+                    .get()
+                    .addOnSuccessListener { documentSnapshot ->
+                        if (documentSnapshot.exists()) {
+                            // Date exists, fetch outfit details and initialize selectedOutfit
+                            fetchOutfitForDate(date)
+                        } else {
+                            Toast.makeText(
+                                this,
+                                "No outfit found for selected date",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                    .addOnFailureListener { e ->
+                        Toast.makeText(
+                            this,
+                            "Error checking date for outfit: $e",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        Log.e("Firestore", "Error checking date for outfit", e)
+                    }
+            } ?: run {
+                Toast.makeText(this, "No date selected to delete outfit", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun fetchOutfitForDate(date: String) {
+        // Fetch outfit details for the given date from Firestore
+        firestore.collection("calendar")
+            .document(date)
+            .get()
+            .addOnSuccessListener { documentSnapshot ->
+                if (documentSnapshot.exists()) {
+                    // Extract outfit details from the document
+                    val outfitImageUrl: String? = documentSnapshot.getString("outfitImageUrl")
+                    // Initialize selectedOutfit with fetched outfit details
+                    selectedOutfit = RecyclerItem(
+                        titleImage = 0, // Set to 0 or any other default value since we're using titleImageURL
+                        heading = "", // Add a heading if necessary
+                        titleImageURL = outfitImageUrl // Assign outfitImageUrl to titleImageURL
+                    )
+                    // Call the removeItem function of the adapter to delete the outfit
+                    outfitAdapter.removeItem(selectedOutfit)
+                    // Delete the outfit document from Firestore
+                    deleteOutfitDate(date)
+                    // Optionally, perform any additional actions after deletion
+                    // For example, hide the outfitImageView if needed
+                    binding.outfitImageView.visibility = View.GONE
+                } else {
+                    Toast.makeText(this, "No outfit found for selected date", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Error fetching outfit for date: $e", Toast.LENGTH_SHORT).show()
+                Log.e("Firestore", "Error fetching outfit for date", e)
+            }
     }
 
     override fun onOutfitSelected(outfit: RecyclerItem) {
@@ -116,8 +167,6 @@ class CalendarActivity : AppCompatActivity(), CalendarDialogFragment.OnOutfitSel
             .addOnSuccessListener { documentSnapshot ->
                 if (documentSnapshot.exists()) {
                     val outfitImageUrl: String? = documentSnapshot.getString("outfitImageUrl")
-                    // Display the outfit image
-                    Log.e("Firestore", "Display Outfit Image: $outfitImageUrl")
 
                     // Create a RecyclerItem with the outfitImageUrl
                     val outfit = RecyclerItem(
@@ -139,45 +188,23 @@ class CalendarActivity : AppCompatActivity(), CalendarDialogFragment.OnOutfitSel
             }
     }
 
-//    private fun fetchAndDisplayOutfit(date: String) {
-//        firestore.collection("calendar")
-//            .document(date) // Assuming each date is a document ID
-//            .get()
-//            .addOnSuccessListener { documentSnapshot ->
-//                if (documentSnapshot.exists()) {
-//                    // Log the entire documentSnapshot to inspect its contents
-//                    Log.d("Firestore", "DocumentSnapshot: $documentSnapshot")
-//
-//                    // Retrieve the outfitImageUrl field
-//                    val outfitImageUrl: String? = documentSnapshot.getString("outfitImageUrl")
-//                    // Log the retrieved outfitImageUrl
-//                    Log.d("Firestore", "Outfit Image URL: $outfitImageUrl")
-//
-//                    if (outfitImageUrl != null) {
-//                        // Display the outfit image
-//                        displayOutfitImage(outfitImageUrl)
-//                    } else {
-//                        Log.e("Firestore", "OutfitImageUrl is null")
-//                        // Clear the displayed outfit image if the outfitImageUrl is null
-//                        clearOutfitImage()
-//                    }
-//                } else {
-//                    // Clear the displayed outfit image if no outfit is saved for the selected date
-//                    Log.e("Firestore", "Document does not exist for date: $date")
-//                    clearOutfitImage()
-//                }
-//            }
-//            .addOnFailureListener { e ->
-//                Toast.makeText(this, "Error fetching outfit: $e", Toast.LENGTH_SHORT).show()
-//                Log.e("Firestore", "Error fetching outfit", e)
-//            }
-//    }
+    private fun deleteOutfitDate(date: String) {
+        // Get the document reference for the specified date
+        val documentReference = firestore.collection("calendar").document(date)
 
-
-    private fun displayOutfitImage(imageUrl: String?) {
-            // Set view to urlImage
-            Picasso.get().load(imageUrl).into(binding.outfitImageView)
+        // Delete the document from Firestore
+        documentReference.delete()
+            .addOnSuccessListener {
+                // Document successfully deleted
+                Toast.makeText(this, "Outfit for $date deleted successfully", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener { e ->
+                // Failed to delete the document
+                Toast.makeText(this, "Failed to delete outfit for $date: $e", Toast.LENGTH_SHORT).show()
+                Log.e("Firestore", "Error deleting outfit for $date", e)
+            }
     }
+
 
     private fun clearOutfitImage() {
         // Clear the displayed outfit image
