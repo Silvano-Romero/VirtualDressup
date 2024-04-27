@@ -28,7 +28,7 @@ class ProfileDAO : DAO() {
      * @param userID The ID of the user.
      * @param profileData The profile data to write.
      */
-    suspend fun writeProfileToProfilesCollection(userID: Int, profileData: Map<String, Any>) {
+    suspend fun writeProfileToProfilesCollection(userID: Any, profileData: Map<String, Any>) {
         writeDocumentToCollection("Profiles", userID.toString(), profileData)
         val profileDocRef = database.collection("Profiles").document(userID.toString())
         println("PROFILE_REF $profileDocRef")

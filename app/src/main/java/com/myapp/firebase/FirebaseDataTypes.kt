@@ -1,17 +1,30 @@
 package com.myapp.firebase
+import java.util.UUID
 
 data class Avatar(
-    val avatarID: String,
+    var avatarID: String,
     val modelID: String,
     val outfits: List<Outfit>,
-){constructor() : this("", "", mutableListOf())}
+) {
+
+    constructor(modelID: String, outfits: List<Outfit>) : this("", modelID, outfits) {
+        this.avatarID = UUID.randomUUID().toString().take(13)
+    }
+    constructor() : this("", "", mutableListOf())
+}
+
 
 data class Outfit(
-    val outfitID: String,
+    var outfitID: String,
     val top: String,
     val bottom: String,
     val modelFile: String?,
-){constructor() : this("", "","", "")}
+){
+    constructor(top: String, bottom: String, modelFile: String) : this("", top, bottom, modelFile) {
+        this.outfitID = UUID.randomUUID().toString().take(13)
+    }
+    constructor() : this("", "","", "")
+}
 
 data class Calendar(
     val outfitImageUrl: String,

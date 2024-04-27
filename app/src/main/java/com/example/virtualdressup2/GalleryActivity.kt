@@ -10,7 +10,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.virtualdressup2.databinding.ActivityGalleryBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.myapp.firebase.Avatar
+import com.myapp.firebase.Outfit
 import com.myapp.firebase.revery.AvatarDAO
 import kotlinx.coroutines.launch
 
@@ -18,6 +20,7 @@ import kotlinx.coroutines.launch
 class GalleryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGalleryBinding
     private lateinit var adapter: GalleryAdapter
+    private lateinit var firebaseAuth: FirebaseAuth
 
     // List of outfits to display in the gallery
     private val outfitList = arrayListOf(
@@ -34,21 +37,21 @@ class GalleryActivity : AppCompatActivity() {
         binding = ActivityGalleryBinding.inflate(layoutInflater) // Initialize binding property
         setContentView(binding.root)
         val outfitList = mutableListOf<RecyclerItem>()
+        firebaseAuth = FirebaseAuth.getInstance()
+        val profileID = firebaseAuth.currentUser?.uid as String
 
         lifecycleScope.launch {
-            val avatarID = "Avatar01"
-            val profileID = "YHd6kmErjjgSoQr9QxgIwA0sUGW2"
+            val avatarID = "87463ae7-5ced"
             val avatar: Avatar =
                 AvatarDAO().getSpecificAvatarFromProfile(profileID, avatarID)
 
             // Handle the avatar object as needed
             val avatarOutfits = avatar.outfits
-
             // Add outfits to outfitList
             for (outfit in avatarOutfits) {
-                val tryOnImgURL = "https://media.revery.ai/generated_model_image/d79b5e0a1b2fd3817da7c3a26005b4b0;${outfit.modelFile};17124436897514586.png"
-                //outfitList.add(RecyclerItem(R.drawable.outfit1, outfit.outfitID, titleImageURL = tryOnImgURL))
-                outfitList.add(RecyclerItem(R.drawable.outfit1, outfit.outfitID, titleImageURL = outfit.modelFile))
+                val tryOnImgURL = "https://media.revery.ai/generated_model_image/${outfit.modelFile}.png"
+                println("MODEL_FILE_LINK: $tryOnImgURL")
+                outfitList.add(RecyclerItem(R.drawable.outfit1, outfit.outfitID, titleImageURL = tryOnImgURL))
             }
 
             // Inflate the layout using view binding

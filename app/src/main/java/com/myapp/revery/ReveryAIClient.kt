@@ -79,8 +79,17 @@ class ReveryAIClient {
                 if (responseBody != null) {
                     // Parse response body and transform into data classes.
                     println(TAG + "Raw JSON Response: $responseBody")
-                    val garmentResponse =
-                        gson.fromJson(responseBody, FilteredGarmentsResponse::class.java)
+
+                    val garmentsRes = responseBody.asJsonObject.get("garments").asJsonArray
+                    val page = responseBody.asJsonObject.get("total_page").asInt
+                    val success = responseBody.asJsonObject.get("success").asBoolean
+
+                    var garments = mutableListOf<Garment>()
+                    for (garment in garmentsRes){
+                        garments.add(getGarmentFromGarmentJson(garment.asJsonObject))
+                    }
+
+                    val garmentResponse = FilteredGarmentsResponse(garments, page, success)
                     println(TAG + garmentResponse)
                     return garmentResponse
                 } else {

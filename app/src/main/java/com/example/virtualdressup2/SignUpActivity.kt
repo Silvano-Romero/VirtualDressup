@@ -6,10 +6,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.example.virtualdressup2.databinding.ActivitySignUpBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.myapp.users.Account
 import com.myapp.users.User
+import com.myapp.firebase.users.ProfileDAO
+import kotlinx.coroutines.launch
 
 // Declaration of the SignUpActivity class which extends AppCompatActivity
 class SignUpActivity : AppCompatActivity() {
@@ -21,7 +24,6 @@ class SignUpActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Inflating the layout using view binding
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -57,6 +59,14 @@ class SignUpActivity : AppCompatActivity() {
                             val account = Account(user, email, pass)
                             user.addUserToDatabase() // This will use Firebase auto-generated user ID
                             account.addAccountToDatabase()
+
+                            // create a profile for new user
+                            lifecycleScope.launch {
+                                ProfileDAO().writeProfileToProfilesCollection(
+                                    user.getUserID(),
+                                    mapOf()
+                                )
+                            }
                             Toast.makeText(this, "Sign up successful", Toast.LENGTH_SHORT).show()
                             firebaseAuth.signOut()
                             // Navigating to SignInActivity after sign-up
