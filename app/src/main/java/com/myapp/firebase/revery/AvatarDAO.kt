@@ -4,7 +4,6 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.myapp.firebase.Avatar
-import com.myapp.firebase.Calendar
 import com.myapp.firebase.DAO
 import com.myapp.firebase.FirebaseConnection
 import com.myapp.firebase.Outfit

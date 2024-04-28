@@ -26,6 +26,3 @@ data class Outfit(
     constructor() : this("", "","", "")
 }
 
-data class Calendar(
-    val outfitImageUrl: String,
-){constructor() : this("")}

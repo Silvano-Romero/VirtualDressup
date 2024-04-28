@@ -2,6 +2,7 @@ package com.example.virtualdressup2
 
 import android.annotation.SuppressLint
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.myapp.revery.Garment
+import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 
 
@@ -37,13 +39,18 @@ class OutfitAdapter(
 
     // Create view holder for each item in the RecyclerView
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OutfitViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false)
+        val itemView =
+            LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false)
         return OutfitViewHolder(itemView)
     }
 
     // Bind data to each item in the RecyclerView
-    override fun onBindViewHolder(holder: OutfitViewHolder, @SuppressLint("RecyclerView") position: Int) {
+    override fun onBindViewHolder(
+        holder: OutfitViewHolder,
+        @SuppressLint("RecyclerView") position: Int
+    ) {
         val currentItem = outfitList[position]
+
         holder.bindWithImageURL(currentItem)
 
         // Set click listener for the item
@@ -75,6 +82,7 @@ class OutfitAdapter(
     inner class OutfitViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val titleImage: ImageView = itemView.findViewById(R.id.outfitImage)
         private val tvHeading: TextView = itemView.findViewById(R.id.outfitName)
+
         init {
             itemView.setOnClickListener {
                 val position = adapterPosition
@@ -85,18 +93,22 @@ class OutfitAdapter(
                 }
             }
         }
+
         // Bind data to the ViewHolder
         fun bind(outfit: RecyclerItem) {
             // Set view to urlImage
             Picasso.get().load(outfit.titleImageURL).into(titleImage)
             tvHeading.text = outfit.heading
         }
+
         fun bindWithImageURL(outfit: RecyclerItem) {
             // Set view to urlImage
             Picasso.get().load(outfit.titleImageURL).into(titleImage)
             tvHeading.text = outfit.heading
         }
+
     }
+
 
     // Function to get the selected outfit
     fun getItemAtPosition(position: Int): RecyclerItem? {
@@ -107,7 +119,9 @@ class OutfitAdapter(
         }
     }
 
+
 }
+
 
 // Add extension function to OutfitAdapter
 fun OutfitAdapter.addShareButtonFunctionality(onShareClick: (RecyclerItem) -> Unit) {
