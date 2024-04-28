@@ -4,6 +4,8 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import com.google.gson.JsonNull
+import com.google.gson.JsonParseException
 
 // This class contains all the GET/POST calls made to ReveryAI api.
 class ReveryAIClient {
@@ -367,19 +369,25 @@ class ReveryAIClient {
 
             // Make request to request_tryon endpoint
             val response = api.requestTryOn(publicKey, oneTimeCode, timestamp, requestBody)
-            println("RESPONSE1" + response)
             // Handle response
             if (response.isSuccessful) {
                 val responseBody = response.body()
                 if (responseBody != null) {
                     println(TAG + "Raw JSON Response Gabe: $responseBody")
+                    // Parse response into TryOnResponse object
                     val tryOnResponse = gson.fromJson(responseBody, TryOnResponse::class.java)
+                    println("Returning Try-on Response $responseBody")
+
+                    // Extract model metadata from the response
+                    val modelMetadata = parseModelMetadata(responseBody.asJsonObject)
+                    tryOnResponse.modelMetadata = modelMetadata
+
                     return tryOnResponse
                 } else {
                     println(TAG + "Response body is null.")
                 }
             } else {
-                println(TAG + "API request failed with status code Gabe2: ${response.code()}")
+                println(TAG + "API request failed with status code: ${response.code()}")
             }
         } catch (e: Exception) {
             println(TAG + "Error fetching data: ${e.message}")
@@ -387,7 +395,6 @@ class ReveryAIClient {
         // Return an empty response or handle errors appropriately
         return TryOnResponse() // Return a default empty response or handle errors appropriately
     }
-
     // Erwin Pan worked on bottom two methods
     suspend fun uploadModel(model: ModelToUpload): String {
         var modelId = ""
@@ -491,5 +498,67 @@ class ReveryAIClient {
 
         return GetModels()
     }
+
+
+//    private fun getGarmentFromTryOnResponse(responseBody: JsonObject): Garment? {
+//        println("Parsing try-on response...")
+//        try {
+//            val modelMetadata = responseBody.getAsJsonObject("model_metadata")
+//            val modelFile = modelMetadata.get("model_file").asString
+//
+//            // Extract gender from model_file
+//            val gender = modelFile.substringBefore(";")
+//
+//            println("Gender extracted from model_file: $gender")
+//            println("Model file: $modelFile")
+//
+//            // Assuming garments are not returned in the response, but you need to construct a Garment object
+//            // based on the model metadata
+//            return Garment(
+//                gender,
+//                modelFile, // Use model_file as the garment ID
+//                ImageUrls("Hey"), // Assuming no image URL is provided in the response
+//                TryOn(
+//                    "whay", // Assuming no bottoms sub-category is provided in the response
+//                    "are", // Assuming no category is provided in the response
+//                    false, // Assuming open outerwear is always false
+//                    false // Assuming enabled is always false
+//                )
+//            )
+//        } catch (e: Exception) {
+//            println("Error while parsing try-on response: ${e.message}")
+//        }
+//        return null
+//    }
+
+    private fun parseModelMetadata(responseBody: JsonObject): ModelMetadata {
+        try {
+            val modelMetadataJson = responseBody.getAsJsonObject("model_metadata")
+            val gender = if (modelMetadataJson.has("gender") && !modelMetadataJson.get("gender").isJsonNull)
+                modelMetadataJson.get("gender").asString
+            else
+                ""
+            val modelFile = if (modelMetadataJson.has("model_file") && !modelMetadataJson.get("model_file").isJsonNull)
+                modelMetadataJson.get("model_file").asString
+            else
+                ""
+            val modelId = if (modelMetadataJson.has("model_id") && !modelMetadataJson.get("model_id").isJsonNull)
+                modelMetadataJson.get("model_id").asString
+            else
+                ""
+            val shoesId = if (modelMetadataJson.has("shoes_id") && !modelMetadataJson.get("shoes_id").isJsonNull)
+                modelMetadataJson.get("shoes_id").asString
+            else
+                null
+
+            return ModelMetadata(gender, modelFile, modelId, shoesId, "free_layering")
+        } catch (e: Exception) {
+            println(TAG + "Unexpected error parsing model metadata: ${e.message}")
+        }
+        // Return default values or handle errors appropriately
+        return ModelMetadata()
+    }
+
+
 }
 

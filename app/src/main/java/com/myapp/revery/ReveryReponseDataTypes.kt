@@ -74,8 +74,10 @@ data class TryOnRequest(
 )
 
 // Data class representing the response from the Try-on request
+@Serializable
 data class TryOnResponse(
-    val modelMetadata: ModelMetadata,
+    @SerialName("model_metadata")
+    var modelMetadata: ModelMetadata,
     val success: Boolean
 )
 { constructor() : this(ModelMetadata(), false) }
