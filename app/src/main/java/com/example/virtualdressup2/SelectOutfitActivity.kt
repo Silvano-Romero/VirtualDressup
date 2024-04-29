@@ -116,10 +116,6 @@ class SelectOutfitActivity : AppCompatActivity() {
                 }
                 binding.bottomsRecyclerView.adapter = bottomsAdapter
 
-                val itemDecoration = SpacesItemDecoration(10) // replace 10 with your desired space in pixels
-                binding.topsRecyclerview.addItemDecoration(itemDecoration)
-                binding.bottomsRecyclerView.addItemDecoration(itemDecoration)
-
             } catch (e: Exception) {
                 Toast.makeText(
                     this@SelectOutfitActivity,
