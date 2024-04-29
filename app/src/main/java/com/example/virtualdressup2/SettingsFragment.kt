@@ -109,6 +109,33 @@ class SettingsFragment : Fragment() {
 
     private fun updateUIWithTheme(selectedTheme: String) {
         val context = requireContext()
+        val primaryColorResId = when (selectedTheme) {
+            "Default" -> R.color.default_primary
+            "Blue" -> R.color.blue_primary
+            "Green" -> R.color.green_primary
+            "Purple" -> R.color.purple_primary
+            else -> R.color.default_primary
+        }
+        val primaryColor = ContextCompat.getColor(context, primaryColorResId)
+
+        val secondaryColorResId = when (selectedTheme) {
+            "Default" -> R.color.default_secondary
+            "Blue" -> R.color.blue_secondary
+            "Green" -> R.color.green_secondary
+            "Purple" -> R.color.purple_secondary
+            else -> R.color.default_secondary
+        }
+        val secondaryColor = ContextCompat.getColor(context, secondaryColorResId)
+
+        val accentColorResId = when (selectedTheme) {
+            "Default" -> R.color.default_accent
+            "Blue" -> R.color.blue_accent
+            "Green" -> R.color.green_accent
+            "Purple" -> R.color.purple_accent
+            else -> R.color.default_accent
+        }
+        val accentColor = ContextCompat.getColor(context, accentColorResId)
+
         val textColorResId = when (selectedTheme) {
             "Default" -> R.color.default_text_color
             "Blue" -> R.color.blue_text_color
@@ -117,7 +144,32 @@ class SettingsFragment : Fragment() {
             else -> R.color.default_text_color
         }
         val textColor = ContextCompat.getColor(context, textColorResId)
+
+        val buttonColorResId = when (selectedTheme) {
+            "Default" -> R.color.default_button_color
+            "Blue" -> R.color.blue_button_color
+            "Green" -> R.color.green_button_color
+            "Purple" -> R.color.purple_button_color
+            else -> R.color.default_button_color
+        }
+        val buttonColor = ContextCompat.getColor(context, buttonColorResId)
+
+        val appBackgroundColorResId = when (selectedTheme) {
+            "Default" -> R.color.default_app_background_color
+            "Blue" -> R.color.blue_app_background_color
+            "Green" -> R.color.green_app_background_color
+            "Purple" -> R.color.purple_app_background_color
+            else -> R.color.default_app_background_color
+        }
+        val appBackgroundColor = ContextCompat.getColor(context, appBackgroundColorResId)
+
+        // Update UI elements with the theme colors
         mTvEmail.setTextColor(textColor)
-        // Update other UI elements as needed
+        logout.setBackgroundColor(buttonColor)
+        view?.setBackgroundColor(appBackgroundColor)
+        // Update other UI elements' colors as needed
+        // For example:
+        // logout.setBackgroundColor(buttonColor)
+        // view.setBackgroundColor(appBackgroundColor)
     }
 }
