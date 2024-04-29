@@ -6,4 +6,34 @@
     <color name="cool_blue">#10648C </color>
     <color name="grey">#ABB2B9 </color>
     <color name="deleteColor">#E91404</color>
+
+
+
+    <color name="default_primary">#FF5722</color>
+    <color name="default_secondary">#2196F3</color>
+    <color name="default_accent">#FFC107</color>
+    <color name="default_text_color">#FFFFFF</color>
+    <color name="default_button_color">#10648C</color>
+    <color name="default_app_background_color">#8febfb</color>
+
+    <color name="blue_primary">#3F51B5</color>
+    <color name="blue_secondary">#03A9F4</color>
+    <color name="blue_accent">#FFEB3B</color>
+    <color name="blue_text_color">#3F51B5</color>
+    <color name="blue_button_color">#FFFFFF</color>
+    <color name="blue_app_background_color">#3F51B5</color>
+
+    <color name="green_primary">#4CAF50</color>
+    <color name="green_secondary">#8BC34A</color>
+    <color name="green_accent">#FF9800</color>
+    <color name="green_text_color">#4CAF50</color>
+    <color name="green_button_color">#333333</color>
+    <color name="green_app_background_color">#4CAF50</color>
+
+    <color name="purple_primary">#9C27B0</color>
+    <color name="purple_secondary">#673AB7</color>
+    <color name="purple_accent">#00BCD4</color>
+    <color name="purple_text_color">#9C27B0</color>
+    <color name="purple_button_color">#333333</color>
+    <color name="purple_app_background_color">#9C27B0</color>
 </resources>

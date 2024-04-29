@@ -64,6 +64,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/user_icon" />
 
+    <Switch
+        android:id="@+id/darkModeSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dark Mode"
+        app:layout_constraintTop_toBottomOf="@id/button_edit_profile"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:checked="false"/>
+
+    <Spinner
+        android:id="@+id/themeSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="76dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.945"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/darkModeSwitch" />
+
     <TextView
         android:id="@+id/emailEt"
         android:layout_width="wrap_content"
@@ -73,5 +94,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:textSize="20sp"
         android:textColor="@color/black" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

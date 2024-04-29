@@ -2,6 +2,7 @@
 package com.example.virtualdressup2
 
 // Importing necessary classes and packages
+import SettingsFragment
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

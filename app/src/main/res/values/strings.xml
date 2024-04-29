@@ -9,4 +9,10 @@
     <string name="ChooseOutfitTextView">Choose an Outfit</string>
     <string name="home" />
     <string name="profile" />
+    <string-array name="theme_options">
+        <item>Default</item>
+        <item>Blue</item>
+        <item>Green</item>
+        <item>Purple</item>
+    </string-array>
 </resources>
