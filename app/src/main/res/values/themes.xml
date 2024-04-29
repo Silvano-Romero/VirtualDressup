@@ -5,32 +5,52 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="AppThemeDefault" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize  default theme attributes here -->
+    <!-- For AppThemeDefault -->
+    <style name="AppThemeDefault" parent="Base.Theme.VirtualDressUp2">
+        <!-- Customize default theme attributes here -->
         <item name="colorPrimary">@color/default_primary</item>
         <item name="colorSecondary">@color/default_secondary</item>
         <item name="colorAccent">@color/default_accent</item>
+        <item name="android:textColorPrimary">@color/default_text_color</item>
+        <item name="android:textColorSecondary">@color/default_text_color</item>
+        <item name="android:windowBackground">@color/default_app_background_color</item>
+        <!-- Add other theme attributes here -->
     </style>
 
-    <style name="AppThemeBlue" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize  blue theme attributes here -->
+    <!-- For AppThemeBlue -->
+    <style name="AppThemeBlue" parent="Base.Theme.VirtualDressUp2">
+        <!-- Customize blue theme attributes here -->
         <item name="colorPrimary">@color/blue_primary</item>
         <item name="colorSecondary">@color/blue_secondary</item>
         <item name="colorAccent">@color/blue_accent</item>
+        <item name="android:textColorPrimary">@color/blue_text_color</item>
+        <item name="android:textColorSecondary">@color/blue_text_color</item>
+        <item name="android:windowBackground">@color/blue_app_background_color</item>
+        <!-- Add other theme attributes here -->
     </style>
 
-    <style name="AppThemeGreen" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize  green theme attributes here -->
+    <!-- For AppThemeGreen -->
+    <style name="AppThemeGreen" parent="Base.Theme.VirtualDressUp2">
+        <!-- Customize green theme attributes here -->
         <item name="colorPrimary">@color/green_primary</item>
         <item name="colorSecondary">@color/green_secondary</item>
         <item name="colorAccent">@color/green_accent</item>
+        <item name="android:textColorPrimary">@color/green_text_color</item>
+        <item name="android:textColorSecondary">@color/green_text_color</item>
+        <item name="android:windowBackground">@color/green_app_background_color</item>
+        <!-- Add other theme attributes here -->
     </style>
 
-    <style name="AppThemePurple" parent="Theme.Material3.DayNight.NoActionBar">
+    <!-- For AppThemePurple -->
+    <style name="AppThemePurple" parent="Base.Theme.VirtualDressUp2">
         <!-- Customize purple theme attributes here -->
         <item name="colorPrimary">@color/purple_primary</item>
         <item name="colorSecondary">@color/purple_secondary</item>
         <item name="colorAccent">@color/purple_accent</item>
+        <item name="android:textColorPrimary">@color/purple_text_color</item>
+        <item name="android:textColorSecondary">@color/purple_text_color</item>
+        <item name="android:windowBackground">@color/purple_app_background_color</item>
+        <!-- Add other theme attributes here -->
     </style>
 
 
