@@ -10,38 +10,35 @@
         android:id="@+id/backButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:clickable="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        app:srcCompat="@drawable/back_arrow_icon"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
         android:contentDescription="@string/back_button_icon"
+        app:srcCompat="@drawable/back_arrow_icon"
         tools:ignore="MissingConstraints" />
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/topsRecyclerview"
-        android:layout_width="582dp"
-        android:layout_height="116dp"
+        android:layout_width="403dp"
+        android:layout_height="148dp"
         android:layout_above="@+id/buttonSave"
-        android:layout_marginBottom="16dp"
-        android:scrollbars="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/bottomsRecyclerView"
+        android:layout_marginTop="352dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/bottomsRecyclerView"
-        android:layout_width="581dp"
-        android:layout_height="131dp"
+        android:layout_width="403dp"
+        android:layout_height="148dp"
         android:layout_above="@+id/buttonSave"
-        android:layout_marginBottom="116dp"
+        android:layout_marginTop="16dp"
         android:scrollbars="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintTop_toBottomOf="@+id/topsRecyclerview"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="4dp" />
 
     <Button
         android:id="@+id/buttonSave"
@@ -52,19 +49,22 @@
         android:text="Save Outfit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bottomsRecyclerView"
+        app:layout_constraintVertical_bias="0.764"
         tools:ignore="MissingConstraints" />
 
     <ImageView
         android:id="@+id/modelImageView"
-        android:layout_width="303dp"
-        android:layout_height="355dp"
+        android:layout_width="305dp"
+        android:layout_height="310dp"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/topsRecyclerview"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.642"
         app:srcCompat="@drawable/default_image" />
 
 
