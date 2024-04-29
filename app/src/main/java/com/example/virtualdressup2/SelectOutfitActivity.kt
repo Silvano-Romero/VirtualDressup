@@ -138,6 +138,10 @@ class SelectOutfitActivity : AppCompatActivity() {
 
         }
 
+        binding.buttonTryOn.setOnClickListener{
+
+        }
+
             // Display TryOnFragment
 //        supportFragmentManager.beginTransaction().replace(R.id.tryOnFragmentContainer, TryOnFragment()).commit()
         }

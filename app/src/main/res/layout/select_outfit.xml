@@ -49,10 +49,10 @@
         android:text="Save Outfit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.819"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bottomsRecyclerView"
-        app:layout_constraintVertical_bias="0.764"
+        app:layout_constraintVertical_bias="0.684"
         tools:ignore="MissingConstraints" />
 
     <ImageView
@@ -66,6 +66,18 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.642"
         app:srcCompat="@drawable/default_image" />
+
+    <Button
+        android:id="@+id/buttonTryOn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Try On Outfit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/buttonSave"
+        app:layout_constraintHorizontal_bias="0.477"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bottomsRecyclerView"
+        app:layout_constraintVertical_bias="0.684" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
