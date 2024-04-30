@@ -1,5 +1,6 @@
 package com.example.virtualdressup2
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,8 +27,25 @@ class GalleryAdapter(
     override fun onBindViewHolder(holder: GalleryViewHolder, position: Int) {
         val currentItem = outfitList[position]
         holder.bindWithImageURL(currentItem)
+
+        // Set click listener for the item
+        holder.itemView.setOnClickListener {
+            // Update the selected position and invoke onItemClick callback
+            selectedPosition = position
+            onItemClick(currentItem, position)
+            notifyDataSetChanged() // Update the view to reflect the selection change
+        }
+
+        // Set background color based on the selected position
+        if (selectedPosition == holder.adapterPosition) {
+            holder.itemView.setBackgroundColor(Color.GRAY)
+        } else {
+            holder.itemView.setBackgroundColor(Color.TRANSPARENT)
+        }
+
         holder.itemView.isSelected = position == selectedPosition // Highlight the selected item
     }
+
 
     // Return the total number of items in the list
     override fun getItemCount() = outfitList.size

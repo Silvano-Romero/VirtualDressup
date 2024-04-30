@@ -2,6 +2,7 @@ package com.example.virtualdressup2
 
 import android.content.ClipData.Item
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -49,9 +50,16 @@ class GalleryActivity : AppCompatActivity() {
             val avatarOutfits = avatar.outfits
             // Add outfits to outfitList
             for (outfit in avatarOutfits) {
-                val tryOnImgURL = "https://media.revery.ai/generated_model_image/${outfit.modelFile}.png"
+                val tryOnImgURL =
+                    "https://media.revery.ai/generated_model_image/${outfit.modelFile}.png"
                 println("MODEL_FILE_LINK: $tryOnImgURL")
-                outfitList.add(RecyclerItem(R.drawable.outfit1, outfit.outfitID, titleImageURL = tryOnImgURL))
+                outfitList.add(
+                    RecyclerItem(
+                        R.drawable.outfit1,
+                        outfit.outfitID,
+                        titleImageURL = tryOnImgURL
+                    )
+                )
             }
 
             // Inflate the layout using view binding
@@ -123,19 +131,26 @@ class GalleryActivity : AppCompatActivity() {
                 val shareIntent = Intent().apply {
                     action = Intent.ACTION_SEND
                     putExtra(Intent.EXTRA_TEXT, "Outfit Details: ${selectedOutfit.heading}")
-                    type = "text/plain"
+                    putExtra(
+                        Intent.EXTRA_STREAM,
+                        Uri.parse(selectedOutfit.titleImageURL)
+                    ) // Use titleImageURL instead of url
+                    type = "image/*" // Set the type to "image/*"
                 }
 
                 // Start the activity to share the outfit details
                 startActivity(Intent.createChooser(shareIntent, "Share Outfit Details"))
             } else {
                 // Show a message if no outfit is selected
-                Toast.makeText(this@GalleryActivity, "Please select an outfit to share", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@GalleryActivity,
+                    "Please select an outfit to share",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
-
-
     }
+
 
 
     // Function to handle item click events in the RecyclerView
