@@ -23,6 +23,9 @@ class CalendarDialogFragment : DialogFragment() {
     private val binding get() = _binding!!
     private val outfitList = mutableListOf<RecyclerItem>()
 
+    private val profileID = FirebaseAuth.getInstance().currentUser?.uid as String
+
+
 
     // Callback interface for outfit selection
     interface OnOutfitSelectedListener {
@@ -63,14 +66,13 @@ class CalendarDialogFragment : DialogFragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                val avatarID = "Avatar01"
-                val profileID = "YHd6kmErjjgSoQr9QxgIwA0sUGW2"
+                val avatarID = "87463ae7-5ced"
                 val avatar: Avatar = AvatarDAO().getSpecificAvatarFromProfile(profileID, avatarID)
                 val avatarOutfits = avatar.outfits
 
                 for (outfit in avatarOutfits) {
-                    val tryOnImgURL = "https://media.revery.ai/generated_model_image/d79b5e0a1b2fd3817da7c3a26005b4b0;${outfit.modelFile};17124436897514586.png"
-                    outfitList.add(RecyclerItem(R.drawable.outfit1, outfit.outfitID, titleImageURL = outfit.modelFile))
+                    val tryOnImgURL = "https://media.revery.ai/generated_model_image/${outfit.modelFile}.png"
+                    outfitList.add(RecyclerItem(R.drawable.outfit1, outfit.outfitID, titleImageURL = tryOnImgURL))
                 }
 
                 outfitAdapter = OutfitAdapter(outfitList) { outfit, position ->
