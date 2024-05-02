@@ -22,6 +22,7 @@ class GalleryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGalleryBinding
     private lateinit var adapter: GalleryAdapter
     private lateinit var firebaseAuth: FirebaseAuth
+    private var positionOfMostRecentClickedOutfit = 0
 
     // List of outfits to display in the gallery
 //    private val outfitList = arrayListOf(
@@ -81,6 +82,7 @@ class GalleryActivity : AppCompatActivity() {
             // Create an instance of GalleryAdapter and pass in the outfitList and item click listener
             adapter = GalleryAdapter(outfitList) { _, position ->
                 // Display a toast message indicating the clicked outfit
+                positionOfMostRecentClickedOutfit = position
                 Toast.makeText(
                     this@GalleryActivity,
                     "Outfit Details\nTop: ${avatarOutfits[position].top}\nBottom: ${avatarOutfits[position].bottom}",
@@ -104,7 +106,13 @@ class GalleryActivity : AppCompatActivity() {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     when (direction) {
                         ItemTouchHelper.LEFT -> {
-                            adapter.deleteItem(viewHolder.adapterPosition)
+                            lifecycleScope.launch {
+                                // Delete outfit from database and application gallery.
+                                var outfitIdToDelete: String = outfitList[viewHolder.adapterPosition].heading
+                                adapter.deleteItem(viewHolder.adapterPosition)
+                                AvatarDAO().deleteOutfitFromAvatar(profileID, avatarID, outfitIdToDelete)
+                            }
+
                         }
 
                         ItemTouchHelper.RIGHT -> {

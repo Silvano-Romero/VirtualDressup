@@ -72,6 +72,26 @@ class AvatarDAO : DAO() {
         return Avatar()
     }
 
+    suspend fun deleteOutfitFromAvatar(profileID: String, avatarID: String, outfitIdToDelete: String){
+        var outfitRef = database.collection(profilesCollectionName)
+            .document(profileID)
+            .collection(avatarsCollectionName)
+            .document(avatarID)
+            .collection(outfitsSubCollectionName)
+            .document(outfitIdToDelete)
+
+        println(outfitRef)
+        outfitRef.delete()
+            .addOnSuccessListener {
+                // Document successfully deleted
+                println("DocumentSnapshot successfully deleted!")
+            }
+            .addOnFailureListener { e ->
+                // Handle any errors
+                println("Error deleting document: $e")
+            }
+    }
+
 
     // Get all available profiles
     suspend fun getAllProfileIDs(): List<String>{
