@@ -1,39 +1,59 @@
 package com.example.virtualdressup2
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.firestore.DocumentSnapshot
+import com.myapp.users.Profile
 
-class ProfileAdapter(private var profiles: MutableList<DocumentSnapshot>) :
-    RecyclerView.Adapter<ProfileAdapter.ProfileViewHolder>() {
+class ProfileAdapter(
+    private val profileList: MutableList<Profile>, // List of profiles to display
+    private val onItemClick: (Profile, position: Int) -> Unit // Callback function for item click events
+) : RecyclerView.Adapter<ProfileAdapter.ProfileViewHolder>() {
 
-    fun setProfiles(profiles: List<DocumentSnapshot>) {
-        this.profiles.clear() // Clear existing profiles
-        this.profiles.addAll(profiles) // Add new profiles
-        notifyDataSetChanged() // Notify adapter that data set has changed
-    }
+    var selectedPosition = RecyclerView.NO_POSITION
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProfileViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_profile, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_profile, parent, false)
         return ProfileViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ProfileViewHolder, position: Int) {
-        val profile = profiles[position]
-        holder.profileNameTextView.text = profile.getString("name") // Adjust according to your data structure
-        // Bind other profile information to corresponding views if needed
+    override fun onBindViewHolder(holder: ProfileAdapter.ProfileViewHolder, position: Int) {
+        val profile = profileList[position]
+        holder.bind(profile)
+
+        // Set click listener for the item
+        holder.itemView.setOnClickListener {
+            // Update the selected position and invoke onItemClick callback
+            selectedPosition = position
+            onItemClick(profile, position)
+            notifyDataSetChanged() // Update the view to reflect the selection change
+        }
+
+        // Set background color based on the selected position
+        if (selectedPosition == holder.adapterPosition) {
+            holder.itemView.setBackgroundColor(Color.GRAY)
+        } else {
+            holder.itemView.setBackgroundColor(Color.TRANSPARENT)
+        }
+
+        holder.itemView.isSelected = position == selectedPosition // Highlight the selected item
     }
 
     override fun getItemCount(): Int {
-        return profiles.size
+        return profileList.size
     }
 
+
     inner class ProfileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val profileNameTextView: TextView = itemView.findViewById(R.id.profileNameTextView)
-        // Declare other views here if needed
+        private val titleImage: ImageView = itemView.findViewById(R.id.profileImageView)
+        private val tvHeading: TextView = itemView.findViewById(R.id.profileTextView)
+
+        fun bind(profile: Profile) {
+            tvHeading.text = profile.firstName
+        }
     }
 }
