@@ -7,14 +7,24 @@ import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.example.virtualdressup2.databinding.ProfileCreationBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.myapp.users.Profile
+import com.myapp.firebase.Avatar
+import com.myapp.firebase.revery.AvatarDAO
+import com.myapp.users.Account
+import com.myapp.users.User
+import kotlinx.coroutines.launch
 
 class ProfileCreationActivity : AppCompatActivity() {
 
+    private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var firstNameInput: EditText
     private lateinit var binding: ProfileCreationBinding
+    private lateinit var account: Account
+    private val profileID = FirebaseAuth.getInstance().currentUser?.uid as String
+    private lateinit var avatar: Avatar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,15 +41,16 @@ class ProfileCreationActivity : AppCompatActivity() {
 
             // Validate input
             if (firstName.isNotEmpty()) {
-                // Create profile
-                val profile = Profile(firstName)
-                saveProfileToDatabase(profile) // Implement this method to save profile
+                // Create avatar
+                val avatar = Avatar(profileID, "modelID", firstName, "gender", listOf())
+
+                saveAvatarToDatabase(avatar) // Implement this method to save avatar
                 // Create Intent to start ProfileSelectionActivity
                 val intent =
                     Intent(this@ProfileCreationActivity, ProfileSelectionActivity::class.java)
 
-                // Put the created profile as an extra
-                intent.putExtra("profiles", profile)
+                // Put the created avatar as an extra
+                intent.putExtra("Avatars", avatar)
 
                 // Start ProfileSelectionActivity
                 startActivity(intent)
@@ -50,19 +61,28 @@ class ProfileCreationActivity : AppCompatActivity() {
         }
     }
 
-
-    // Save profile to Firestore
-    fun saveProfileToDatabase(profile: Profile) {
-        val db = FirebaseFirestore.getInstance()
-        db.collection("profiles").add(profile)
-            .addOnSuccessListener { documentReference ->
-                Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+    fun saveAvatarToDatabase(avatar: Avatar) {
+        lifecycleScope.launch {
+            val avatarDAO = AvatarDAO()
+            if(avatarDAO.isProfileInDatabase(avatar.avatarID)){
+                avatarDAO.addAvatarToProfile(profileID, avatar)
+                println("AVATAR HAS BEEN SAVED: $profileID, ${avatar.avatarID}")
+            } else {
+                println("Avatar $profileID is not in the database.")
             }
-            .addOnFailureListener { e ->
-                Log.w(TAG, "Error adding document", e)
-            }
+        }
     }
+
 }
+
+
+
+
+
+
+
+
+
 
 
 
