@@ -48,7 +48,7 @@ class ProfileSelectionActivity : AppCompatActivity() {
                 Toast.LENGTH_LONG
             ).show()
             // Create Intent to start the new activity
-            val intent = Intent(this@ProfileSelectionActivity, AvatarCreationActivity::class.java)
+            val intent = Intent(this@ProfileSelectionActivity, MainActivity::class.java)
 
             // Put the selected profile as an extra
             intent.putExtra("Avatars", profile)

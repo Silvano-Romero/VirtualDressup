@@ -3,6 +3,7 @@ package com.example.virtualdressup2
 // SelectOutfitActivity.kt
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils.replace
 import android.util.Log
@@ -144,7 +145,9 @@ class SelectOutfitActivity : AppCompatActivity() {
 
         // Set click listener for the back button
         binding.backButton.setOnClickListener {
-            onBackPressed()
+            val intent = Intent(this@SelectOutfitActivity, MainActivity::class.java)
+            startActivity(intent)
+            finish()
         }
 
         binding.buttonSave.setOnClickListener{
