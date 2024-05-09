@@ -31,6 +31,7 @@ class ProfileCreationActivity : AppCompatActivity() {
     private lateinit var avatar: Avatar
     private lateinit var maleModelAdapter: MaleModelAdapter
     private lateinit var femaleModelAdapter: FemaleModelAdapter
+    private var isMale = false
     private var maleModelPosition = 0
     private var femaleModelPosition = 0
     private lateinit var model: RecyclerItem
@@ -67,7 +68,8 @@ class ProfileCreationActivity : AppCompatActivity() {
                     RecyclerItem(
                         0,
                         "",
-                        titleImageURL = tryOnImgURL
+                        titleImageURL = tryOnImgURL,
+                        modelID = modelId
                     )
                 )
             }
@@ -78,7 +80,8 @@ class ProfileCreationActivity : AppCompatActivity() {
                     RecyclerItem(
                         0,
                         "",
-                        titleImageURL = tryOnImgURL
+                        titleImageURL = tryOnImgURL,
+                        modelID = modelId
                     )
                 )
             }
@@ -94,6 +97,7 @@ class ProfileCreationActivity : AppCompatActivity() {
             // Create an instance of GarmentTopsAdapter and pass in the garmentTopsList and item click listener
             maleModelAdapter = MaleModelAdapter(maleModelList) { _, position ->
                 maleModelPosition = position
+                isMale = true
                 // Display a toast message indicating the clicked outfit
                 Toast.makeText(
                     this@ProfileCreationActivity,
@@ -116,6 +120,7 @@ class ProfileCreationActivity : AppCompatActivity() {
 
             // Create an instance of GarmentTopsAdapter and pass in the garmentTopsList and item click listener
             femaleModelAdapter = FemaleModelAdapter(femaleModelList) { _, position ->
+                isMale = false
                 femaleModelPosition = position
                 // Display a toast message indicating the clicked outfit
                 Toast.makeText(
@@ -145,8 +150,18 @@ class ProfileCreationActivity : AppCompatActivity() {
             // Validate input
             if (firstName.isNotEmpty()) {
                 // Create avatar
-                val avatar = Avatar(profileID, "modelID", firstName, "gender", listOf())
+                var modelID = ""
+                var gender = ""
+                if(isMale){
+                    modelID = maleModelList[maleModelPosition].modelID as String
+                    gender = ReveryAIConstants.MALE
+                }else{
+                    modelID = femaleModelList[femaleModelPosition].modelID as String
+                    gender = ReveryAIConstants.FEMALE
+                }
 
+                val avatar = Avatar(profileID, modelID, firstName, gender, listOf())
+                //println("AVATAR_TO_PROFILE: $avatar")
                 saveAvatarToDatabase(avatar) // Implement this method to save avatar
                 // Create Intent to start ProfileSelectionActivity
                 val intent =
