@@ -23,11 +23,6 @@ import kotlinx.coroutines.launch
 import com.myapp.revery.ReveryAIClient
 import com.myapp.revery.ReveryAIConstants
 //fun getGarments(){
-//    GlobalScope.launch(Dispatchers.IO) {
-//        // Initialize revery AI client
-//        val reveryClient = ReveryAIClient()
-//        // Fetch Filtered Garments
-//        reveryClient.getFilteredGarments()
 //
 //        // Fetch models for female and male genders
 //        val female = reveryClient.getModels(ReveryAIConstants.FEMALE)

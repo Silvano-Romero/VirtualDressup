@@ -1,6 +1,6 @@
 package com.example.virtualdressup2
 
-import android.content.ContentValues.TAG
+import com.myapp.revery.ReveryAIClient
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.myapp.firebase.Avatar
 import com.myapp.firebase.revery.AvatarDAO
+import com.myapp.revery.ReveryAIConstants
 import com.myapp.users.Account
 import com.myapp.users.User
 import com.squareup.picasso.Picasso
@@ -52,28 +53,35 @@ class ProfileCreationActivity : AppCompatActivity() {
                 AvatarDAO().getSpecificAvatarFromProfile(profileID, avatarID)
 
             // Handle the avatar object as needed
-            val avatarOutfits = avatar.outfits
-            // Add outfits to outfitList
-            for (outfit in avatarOutfits) {
-                val tryOnImgURL =
-                    "https://media.revery.ai/revery_client_models/${avatar.modelID}/ou_aligned_transparent.png"
-                println("MODEL_FILE_LINK: $tryOnImgURL")
+//            val avatarOutfits = avatar.outfits
+//            val avatarModels = avatar.gender
+            val fetchMaleModel = ReveryAIClient().getModels(gender = ReveryAIConstants.MALE)
+            val fetchFemaleModel = ReveryAIClient().getModels(gender = ReveryAIConstants.FEMALE)
+
+//            println("fetchMaleModel.model_ids: ${fetchMaleModel.model_ids}")
+//            println("fetchFemaleModel.model_ids: ${fetchFemaleModel.model_ids}")
+
+            for (modelId in fetchMaleModel.model_ids) {
+                val tryOnImgURL = "https://media.revery.ai/revery_client_models/$modelId/ou_aligned_transparent.png"
                 maleModelList.add(
                     RecyclerItem(
-                        R.drawable.outfit1,
-                        outfit.outfitID,
-                        titleImageURL = tryOnImgURL
-                    )
-                )
-                femaleModelList.add(
-                    RecyclerItem(
-                        R.drawable.outfit1,
-                        outfit.outfitID,
+                        0,
+                        "",
                         titleImageURL = tryOnImgURL
                     )
                 )
             }
 
+            for (modelId in fetchFemaleModel.model_ids) {
+                val tryOnImgURL = "https://media.revery.ai/revery_client_models/$modelId/ou_aligned_transparent.png"
+                femaleModelList.add(
+                    RecyclerItem(
+                        0,
+                        "",
+                        titleImageURL = tryOnImgURL
+                    )
+                )
+            }
             // Use LinearLayoutManager to display outfits in a horizontal layout
             val maleLayoutManager =
                 LinearLayoutManager(
@@ -156,30 +164,18 @@ class ProfileCreationActivity : AppCompatActivity() {
         }
     }
 
-//    private fun displaySelectedOutfit(outfit: RecyclerItem) {
-//        // Update the UI to display the selected outfit details or image
-//        // For example, if you have an ImageView to display the outfit image:
-//        binding.modelImageView.visibility = View.VISIBLE
-//        bindWithModelURL(outfit)
-//    }
-//
-//    private fun bindWithModelURL(outfit: RecyclerItem) {
-//        // Set view to urlImage
-//        Picasso.get().load(outfit.modelID).into(binding.modelImageView)
-//    }
-
     fun saveAvatarToDatabase(avatar: Avatar) {
         lifecycleScope.launch {
             val avatarDAO = AvatarDAO()
-            if(avatarDAO.isProfileInDatabase(avatar.avatarID)){
+            if (avatarDAO.isProfileInDatabase(avatar.avatarID)) {
                 avatarDAO.addAvatarToProfile(profileID, avatar)
                 println("AVATAR HAS BEEN SAVED: $profileID, ${avatar.avatarID}")
             } else {
                 println("Avatar $profileID is not in the database.")
             }
         }
-    }
 
+    }
 }
 
 
