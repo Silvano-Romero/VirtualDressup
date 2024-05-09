@@ -22,8 +22,7 @@ class CalendarDialogFragment : DialogFragment() {
     private var mostRecentPosition: Int = 0
     private val binding get() = _binding!!
     private val outfitList = mutableListOf<RecyclerItem>()
-
-    private val profileID = FirebaseAuth.getInstance().currentUser?.uid as String
+    private lateinit var firebaseAuth: FirebaseAuth
 
 
 
@@ -66,7 +65,9 @@ class CalendarDialogFragment : DialogFragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                val avatarID = "87463ae7-5ced"
+                firebaseAuth = FirebaseAuth.getInstance()
+                val profileID = firebaseAuth.currentUser?.uid as String
+                val avatarID = CurrentProfile.profileID
                 val avatar: Avatar = AvatarDAO().getSpecificAvatarFromProfile(profileID, avatarID)
                 val avatarOutfits = avatar.outfits
 
@@ -84,8 +85,6 @@ class CalendarDialogFragment : DialogFragment() {
                         Toast.LENGTH_LONG
                     ).show()
                 }
-
-
                 binding.outfitRecyclerView.adapter = outfitAdapter
             } catch (e: Exception) {
                 Toast.makeText(context, "Error loading outfits: ${e.message}", Toast.LENGTH_SHORT).show()

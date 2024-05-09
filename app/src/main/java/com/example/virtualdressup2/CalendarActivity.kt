@@ -13,13 +13,18 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 import java.util.Calendar
 import android.util.Log
+import com.google.firebase.auth.FirebaseAuth
+import com.myapp.firebase.Avatar
+import com.myapp.firebase.revery.AvatarDAO
 
 class CalendarActivity : AppCompatActivity(), CalendarDialogFragment.OnOutfitSelectedListener {
     private lateinit var binding: ActivityCalendarBinding
     private lateinit var outfitAdapter: OutfitAdapter
     private lateinit var selectedOutfit: RecyclerItem
     private lateinit var firestore: FirebaseFirestore
+    private lateinit var firebaseAuth: FirebaseAuth
     private var selectedDate: String? = null
+    private val profileID = FirebaseAuth.getInstance().currentUser?.uid as String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +33,9 @@ class CalendarActivity : AppCompatActivity(), CalendarDialogFragment.OnOutfitSel
 
         // Initialize Firestore
         firestore = FirebaseFirestore.getInstance()
+        firebaseAuth = FirebaseAuth.getInstance()
+        val profileID = firebaseAuth.currentUser?.uid as String
+
 
         // Initialize the outfit adapter with an empty list
         outfitAdapter = OutfitAdapter(emptyList()) { outfit, position ->
@@ -138,7 +146,9 @@ class CalendarActivity : AppCompatActivity(), CalendarDialogFragment.OnOutfitSel
         )
 
         firestore.collection("calendar")
-            .document(date)
+            .document(profileID) // Use profileID as the document ID
+            .collection(date) // Add a subcollection for each date
+            .document("outfit") // Use a document to store the outfit data
             .set(outfitData)
             .addOnSuccessListener {
                 Toast.makeText(this, "Outfit saved for $date", Toast.LENGTH_SHORT).show()
@@ -147,6 +157,8 @@ class CalendarActivity : AppCompatActivity(), CalendarDialogFragment.OnOutfitSel
                 Toast.makeText(this, "Failed to save outfit: $e", Toast.LENGTH_SHORT).show()
             }
     }
+
+
 
     private fun displaySelectedOutfit(outfit: RecyclerItem) {
         // Update the UI to display the selected outfit details or image
@@ -162,7 +174,9 @@ class CalendarActivity : AppCompatActivity(), CalendarDialogFragment.OnOutfitSel
 
     private fun fetchAndDisplayOutfit(date: String) {
         firestore.collection("calendar")
-            .document(date) // Assuming each date is a document ID
+            .document(profileID) // Use profileID as the document ID
+            .collection(date) // Use date as the subcollection
+            .document("outfit") // Use "outfit" as the document to store the outfit data
             .get()
             .addOnSuccessListener { documentSnapshot ->
                 if (documentSnapshot.exists()) {
@@ -187,6 +201,7 @@ class CalendarActivity : AppCompatActivity(), CalendarDialogFragment.OnOutfitSel
                 Log.e("Firestore", "Error fetching outfit", e)
             }
     }
+
 
     private fun deleteOutfitDate(date: String) {
         // Get the document reference for the specified date

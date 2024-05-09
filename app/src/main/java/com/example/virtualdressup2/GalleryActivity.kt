@@ -162,8 +162,6 @@ class GalleryActivity : AppCompatActivity() {
         }
     }
 
-
-
     // Function to handle item click events in the RecyclerView
     private fun onItemClick(position: RecyclerItem) {
         // Display a toast message indicating the clicked outfit
