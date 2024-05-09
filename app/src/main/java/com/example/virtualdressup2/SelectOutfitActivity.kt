@@ -48,7 +48,7 @@ class SelectOutfitActivity : AppCompatActivity() {
     private lateinit var bottomsAdapter: GarmentBottomsAdapter
     private var topGarmentPosition = 0
     private var bottomGarmentPosition = 0
-    private var avatarID = "87463ae7-5ced"
+    private var avatarID = CurrentProfile.profileID
     private val profileID = FirebaseAuth.getInstance().currentUser?.uid as String
     private var tryOnResponse: TryOnResponse? = null
     private var avatar: Avatar = Avatar()
@@ -79,14 +79,15 @@ class SelectOutfitActivity : AppCompatActivity() {
                     modelID = modelURL // Assign modelURL to modelID
                 )
                 // Add outfits to outfitList
-                val filteredGarmentsResponse = ReveryAIClient().getFilteredGarments(gender = ReveryAIConstants.FEMALE, category = ReveryAIConstants.TOPS)
+                println("OUTFIT_SELECT: ${CurrentProfile.details()}")
+                val filteredGarmentsResponse = ReveryAIClient().getFilteredGarments(gender = CurrentProfile.gender, category = ReveryAIConstants.TOPS)
                 for (top in filteredGarmentsResponse.garments) {
                     var topsUrl: String = top.imageUrls.productImage.replace("\"", "")
                     var topID = top.id.replace("\"", "")
                     garmentTopsList.add(RecyclerItem(0, "", titleImageURL = topsUrl, topID = topID))
                 }
 
-                val bottoms = ReveryAIClient().getFilteredGarments(category = ReveryAIConstants.BOTTOMS)
+                val bottoms = ReveryAIClient().getFilteredGarments(gender = CurrentProfile.gender, category = ReveryAIConstants.BOTTOMS)
                 for (bottom in bottoms.garments) {
                     val bottomsURL = bottom.imageUrls.productImage.replace("\"", "")
                     var bottomID = bottom.id.replace("\"", "")

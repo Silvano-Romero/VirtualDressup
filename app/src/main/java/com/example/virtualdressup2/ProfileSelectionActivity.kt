@@ -39,8 +39,12 @@ class ProfileSelectionActivity : AppCompatActivity() {
         binding.profileRecyclerview.layoutManager = layoutManager
 
         // Create an instance of ProfileAdapter and pass in the profileList and item click listener
-        avatarAdapter = AvatarAdapter(avatarList) { profile, _ ->
+        avatarAdapter = AvatarAdapter(avatarList) { profile, position ->
+            var avatar = avatarList[position]
 
+            CurrentProfile.profileID = avatar.avatarID
+            CurrentProfile.gender = avatar.gender
+            println("SELECTED_PROFILE: ${CurrentProfile.profileID}, ${CurrentProfile.gender}")
             // Display a toast message indicating the clicked profile
             Toast.makeText(
                 this@ProfileSelectionActivity,
@@ -51,8 +55,8 @@ class ProfileSelectionActivity : AppCompatActivity() {
             val intent = Intent(this@ProfileSelectionActivity, MainActivity::class.java)
 
             // Put the selected profile as an extra
-            intent.putExtra("Avatars", profile)
-
+//            intent.putExtra("Avatars", profile)
+            println("PROFILE_SELECT_DETAILS: ${CurrentProfile.details()}")
             // Start the new activity
             startActivity(intent)
         }

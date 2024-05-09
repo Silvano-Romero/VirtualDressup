@@ -168,7 +168,7 @@ class ProfileCreationActivity : AppCompatActivity() {
                     Intent(this@ProfileCreationActivity, ProfileSelectionActivity::class.java)
 
                 // Put the created avatar as an extra
-                intent.putExtra("Avatars", avatar)
+                //intent.putExtra("Avatars", avatar)
 
                 // Start ProfileSelectionActivity
                 startActivity(intent)

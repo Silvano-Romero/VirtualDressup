@@ -43,9 +43,12 @@ class GalleryActivity : AppCompatActivity() {
         val profileID = firebaseAuth.currentUser?.uid as String
 
         lifecycleScope.launch {
-            val avatarID = "87463ae7-5ced"
+            println("GALLERY_ACTIVITY: ${CurrentProfile.details()}")
+            val avatarID = CurrentProfile.profileID
             val avatar: Avatar =
                 AvatarDAO().getSpecificAvatarFromProfile(profileID, avatarID)
+
+            println("CURRENT_AVATAR_IN_GALLERY: $avatar")
 
             // Handle the avatar object as needed
             val avatarOutfits = avatar.outfits
