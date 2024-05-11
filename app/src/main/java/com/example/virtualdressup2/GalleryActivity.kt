@@ -2,6 +2,7 @@ package com.example.virtualdressup2
 
 import android.content.ClipData.Item
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -21,6 +22,7 @@ class GalleryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGalleryBinding
     private lateinit var adapter: GalleryAdapter
     private lateinit var firebaseAuth: FirebaseAuth
+    private var positionOfMostRecentClickedOutfit = 0
 
     // List of outfits to display in the gallery
 //    private val outfitList = arrayListOf(
@@ -41,17 +43,27 @@ class GalleryActivity : AppCompatActivity() {
         val profileID = firebaseAuth.currentUser?.uid as String
 
         lifecycleScope.launch {
-            val avatarID = "87463ae7-5ced"
+            println("GALLERY_ACTIVITY: ${CurrentProfile.details()}")
+            val avatarID = CurrentProfile.profileID
             val avatar: Avatar =
                 AvatarDAO().getSpecificAvatarFromProfile(profileID, avatarID)
+
+            println("CURRENT_AVATAR_IN_GALLERY: $avatar")
 
             // Handle the avatar object as needed
             val avatarOutfits = avatar.outfits
             // Add outfits to outfitList
             for (outfit in avatarOutfits) {
-                val tryOnImgURL = "https://media.revery.ai/generated_model_image/${outfit.modelFile}.png"
+                val tryOnImgURL =
+                    "https://media.revery.ai/generated_model_image/${outfit.modelFile}.png"
                 println("MODEL_FILE_LINK: $tryOnImgURL")
-                outfitList.add(RecyclerItem(R.drawable.outfit1, outfit.outfitID, titleImageURL = tryOnImgURL))
+                outfitList.add(
+                    RecyclerItem(
+                        R.drawable.outfit1,
+                        outfit.outfitID,
+                        titleImageURL = tryOnImgURL
+                    )
+                )
             }
 
             // Inflate the layout using view binding
@@ -73,6 +85,7 @@ class GalleryActivity : AppCompatActivity() {
             // Create an instance of GalleryAdapter and pass in the outfitList and item click listener
             adapter = GalleryAdapter(outfitList) { _, position ->
                 // Display a toast message indicating the clicked outfit
+                positionOfMostRecentClickedOutfit = position
                 Toast.makeText(
                     this@GalleryActivity,
                     "Outfit Details\nTop: ${avatarOutfits[position].top}\nBottom: ${avatarOutfits[position].bottom}",
@@ -96,7 +109,13 @@ class GalleryActivity : AppCompatActivity() {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     when (direction) {
                         ItemTouchHelper.LEFT -> {
-                            adapter.deleteItem(viewHolder.adapterPosition)
+                            lifecycleScope.launch {
+                                // Delete outfit from database and application gallery.
+                                var outfitIdToDelete: String = outfitList[viewHolder.adapterPosition].heading
+                                adapter.deleteItem(viewHolder.adapterPosition)
+                                AvatarDAO().deleteOutfitFromAvatar(profileID, avatarID, outfitIdToDelete)
+                            }
+
                         }
 
                         ItemTouchHelper.RIGHT -> {
@@ -123,20 +142,25 @@ class GalleryActivity : AppCompatActivity() {
                 val shareIntent = Intent().apply {
                     action = Intent.ACTION_SEND
                     putExtra(Intent.EXTRA_TEXT, "Outfit Details: ${selectedOutfit.heading}")
-                    type = "text/plain"
+                    putExtra(
+                        Intent.EXTRA_STREAM,
+                        Uri.parse(selectedOutfit.titleImageURL)
+                    ) // Use titleImageURL instead of url
+                    type = "image/*" // Set the type to "image/*"
                 }
 
                 // Start the activity to share the outfit details
                 startActivity(Intent.createChooser(shareIntent, "Share Outfit Details"))
             } else {
                 // Show a message if no outfit is selected
-                Toast.makeText(this@GalleryActivity, "Please select an outfit to share", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@GalleryActivity,
+                    "Please select an outfit to share",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
-
-
     }
-
 
     // Function to handle item click events in the RecyclerView
     private fun onItemClick(position: RecyclerItem) {

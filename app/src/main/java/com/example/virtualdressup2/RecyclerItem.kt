@@ -12,6 +12,8 @@ data class RecyclerItem(
     val category: String? = null,
     val modelID: String? = null,
     val titleImageURL: String? = null,
+    val topID: String? = null,
+    val BottomID: String? = null,
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readInt(),

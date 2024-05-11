@@ -22,6 +22,8 @@ class CalendarDialogFragment : DialogFragment() {
     private var mostRecentPosition: Int = 0
     private val binding get() = _binding!!
     private val outfitList = mutableListOf<RecyclerItem>()
+    private lateinit var firebaseAuth: FirebaseAuth
+
 
 
     // Callback interface for outfit selection
@@ -63,14 +65,15 @@ class CalendarDialogFragment : DialogFragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                val avatarID = "Avatar01"
-                val profileID = "YHd6kmErjjgSoQr9QxgIwA0sUGW2"
+                firebaseAuth = FirebaseAuth.getInstance()
+                val profileID = firebaseAuth.currentUser?.uid as String
+                val avatarID = CurrentProfile.profileID
                 val avatar: Avatar = AvatarDAO().getSpecificAvatarFromProfile(profileID, avatarID)
                 val avatarOutfits = avatar.outfits
 
                 for (outfit in avatarOutfits) {
-                    val tryOnImgURL = "https://media.revery.ai/generated_model_image/d79b5e0a1b2fd3817da7c3a26005b4b0;${outfit.modelFile};17124436897514586.png"
-                    outfitList.add(RecyclerItem(R.drawable.outfit1, outfit.outfitID, titleImageURL = outfit.modelFile))
+                    val tryOnImgURL = "https://media.revery.ai/generated_model_image/${outfit.modelFile}.png"
+                    outfitList.add(RecyclerItem(R.drawable.outfit1, outfit.outfitID, titleImageURL = tryOnImgURL))
                 }
 
                 outfitAdapter = OutfitAdapter(outfitList) { outfit, position ->
@@ -82,8 +85,6 @@ class CalendarDialogFragment : DialogFragment() {
                         Toast.LENGTH_LONG
                     ).show()
                 }
-
-
                 binding.outfitRecyclerView.adapter = outfitAdapter
             } catch (e: Exception) {
                 Toast.makeText(context, "Error loading outfits: ${e.message}", Toast.LENGTH_SHORT).show()

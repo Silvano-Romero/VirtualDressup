@@ -1,16 +1,19 @@
 package com.myapp.firebase
+import com.google.firebase.firestore.PropertyName
+import java.io.Serializable
 import java.util.UUID
 
 data class Avatar(
     var avatarID: String,
     val modelID: String,
+    @get:PropertyName("FirstName") @set:PropertyName("FirstName") var firstName: String,
+    val gender: String,
     val outfits: List<Outfit>,
-) {
-
-    constructor(modelID: String, outfits: List<Outfit>) : this("", modelID, outfits) {
+) : Serializable {
+    constructor(modelID: String, outfits: List<Outfit>) : this("", "","","", outfits) {
         this.avatarID = UUID.randomUUID().toString().take(13)
     }
-    constructor() : this("", "", mutableListOf())
+    constructor() : this("", "","","", mutableListOf())
 }
 
 

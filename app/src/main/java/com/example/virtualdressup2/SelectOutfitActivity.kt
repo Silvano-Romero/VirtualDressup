@@ -3,6 +3,7 @@ package com.example.virtualdressup2
 // SelectOutfitActivity.kt
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils.replace
 import android.util.Log
@@ -12,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,11 +22,15 @@ import com.example.virtualdressup2.OutfitAdapter
 import com.example.virtualdressup2.databinding.ActivityGalleryBinding
 import com.example.virtualdressup2.databinding.SelectOutfitBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.auth.FirebaseAuth
 import com.myapp.firebase.Avatar
+import com.myapp.firebase.Outfit
 import com.myapp.firebase.revery.AvatarDAO
 import com.myapp.firebase.users.UserDAO
 import com.myapp.revery.Garment
 import com.myapp.revery.ReveryAIClient
+import com.myapp.revery.ReveryAIConstants
+import com.myapp.revery.TryOnResponse
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.launch
 
@@ -36,10 +42,17 @@ class SelectOutfitActivity : AppCompatActivity() {
 //    private var mostRecentPosition: Int = 0
     private lateinit var binding: SelectOutfitBinding
     private lateinit var model: RecyclerItem
-//    private lateinit var tops: RecyclerItem
+    //    private lateinit var tops: RecyclerItem
 //    private lateinit var bottoms: RecyclerItem
     private lateinit var topsAdapter: GarmentTopsAdapter
     private lateinit var bottomsAdapter: GarmentBottomsAdapter
+    private var topGarmentPosition = 0
+    private var bottomGarmentPosition = 0
+    private var avatarID = CurrentProfile.profileID
+    private val profileID = FirebaseAuth.getInstance().currentUser?.uid as String
+    private var tryOnResponse: TryOnResponse? = null
+    private var avatar: Avatar = Avatar()
+    private var outfit: Outfit = Outfit()
 
 //    private val outfitList = mutableListOf<RecyclerItem>()
 
@@ -54,9 +67,7 @@ class SelectOutfitActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             try {
-                val avatarID = "Avatar01"
-                val profileID = "YHd6kmErjjgSoQr9QxgIwA0sUGW2"
-                val avatar: Avatar = AvatarDAO().getSpecificAvatarFromProfile(profileID, avatarID)
+                avatar = AvatarDAO().getSpecificAvatarFromProfile(profileID, avatarID)
                 val avatarModels = avatar.modelID
 
                 // Assuming `model` contains the model URL
@@ -67,18 +78,20 @@ class SelectOutfitActivity : AppCompatActivity() {
                     heading = "", // Add a heading if necessary
                     modelID = modelURL // Assign modelURL to modelID
                 )
-//                // Add outfits to outfitList
-                for (avatar in avatarModels) {
-                    val topsURL =
-                        "https://revery-integration-tools.s3.us-east-2.amazonaws.com/API_website/tops.jpeg"
-                    garmentTopsList.add(RecyclerItem(0, "", titleImageURL = topsURL))
-
+                // Add outfits to outfitList
+                println("OUTFIT_SELECT: ${CurrentProfile.details()}")
+                val filteredGarmentsResponse = ReveryAIClient().getFilteredGarments(gender = CurrentProfile.gender, category = ReveryAIConstants.TOPS)
+                for (top in filteredGarmentsResponse.garments) {
+                    var topsUrl: String = top.imageUrls.productImage.replace("\"", "")
+                    var topID = top.id.replace("\"", "")
+                    garmentTopsList.add(RecyclerItem(0, "", titleImageURL = topsUrl, topID = topID))
                 }
 
-                for (avatar in avatarModels) {
-                    val bottomsURL =
-                        "https://revery-integration-tools.s3.us-east-2.amazonaws.com/API_website/bottoms.jpeg"
-                    garmentBottomsList.add(RecyclerItem(0, "", titleImageURL = bottomsURL))
+                val bottoms = ReveryAIClient().getFilteredGarments(gender = CurrentProfile.gender, category = ReveryAIConstants.BOTTOMS)
+                for (bottom in bottoms.garments) {
+                    val bottomsURL = bottom.imageUrls.productImage.replace("\"", "")
+                    var bottomID = bottom.id.replace("\"", "")
+                    garmentBottomsList.add(RecyclerItem(0, "", titleImageURL = bottomsURL, BottomID = bottomID))
                 }
 
                 // Load the image into the ImageView using Picasso
@@ -91,6 +104,7 @@ class SelectOutfitActivity : AppCompatActivity() {
 
                 // Create an instance of GarmentTopsAdapter and pass in the garmentTopsList and item click listener
                 topsAdapter = GarmentTopsAdapter(garmentTopsList) { _, position ->
+                    topGarmentPosition = position
                     // Display a toast message indicating the clicked outfit
                     Toast.makeText(
                         this@SelectOutfitActivity,
@@ -108,6 +122,7 @@ class SelectOutfitActivity : AppCompatActivity() {
                 // Create an instance of GarmentBottomsAdapter and pass in the garmentBottomsList and item click listener
                 bottomsAdapter = GarmentBottomsAdapter(garmentBottomsList) { _, position ->
                     // Display a toast message indicating the clicked outfit
+                    bottomGarmentPosition = position
                     Toast.makeText(
                         this@SelectOutfitActivity,
                         "Bottom: ${garmentBottomsList[position].titleImageURL}",
@@ -127,24 +142,57 @@ class SelectOutfitActivity : AppCompatActivity() {
         }
 
         // Fetch and display initial outfit
-            // fetchAndDisplayOutfit()
+        // fetchAndDisplayOutfit()
 
-            // Set click listener for the back button
+        // Set click listener for the back button
         binding.backButton.setOnClickListener {
-            onBackPressed()
+            val intent = Intent(this@SelectOutfitActivity, MainActivity::class.java)
+            startActivity(intent)
+            finish()
         }
 
         binding.buttonSave.setOnClickListener{
+            // Save outfit to avatar in firestone if there is a valid tryon response value.
+            lifecycleScope.launch {
+                if( tryOnResponse !=  null){
+                    AvatarDAO().addOutfitToAvatar(profileID, avatar.avatarID ,outfit)
+                    println("OUTFIT HAS BEEN SAVED: $profileID, ${avatar.avatarID}, $outfit")
+                }
+                tryOnResponse = null
+            }
 
         }
 
         binding.buttonTryOn.setOnClickListener{
+            //
+            lifecycleScope.launch {
+                avatar = AvatarDAO().getSpecificAvatarFromProfile(profileID , avatarID)
+                val topID = garmentTopsList[topGarmentPosition].topID as String
+                val bottomID = garmentBottomsList[bottomGarmentPosition].BottomID as String
 
+                val garments = mapOf(
+                    "tops" to topID,
+                    "bottoms" to bottomID
+                )
+                // Makes API requestTryOn with provided parameters
+                tryOnResponse = ReveryAIClient().requestTryOn(garments, avatar.modelID, null, "transparent", false)
+                val modelFile = tryOnResponse?.modelMetadata?.modelFile as String
+
+                // Update model image with outfit in application
+                outfit = Outfit(topID, bottomID, modelFile)
+                model = RecyclerItem(
+                    titleImage = 0, // Set to 0 or any other default value since we're using titleImageURL
+                    heading = "", // Add a heading if necessary
+                    modelID = "https://media.revery.ai/generated_model_image/${modelFile}.png" // Assign modelURL to modelID
+                )
+                bindWithModelURL(model)
+                displaySelectedOutfit(model)
+            }
         }
 
-            // Display TryOnFragment
+        // Display TryOnFragment
 //        supportFragmentManager.beginTransaction().replace(R.id.tryOnFragmentContainer, TryOnFragment()).commit()
-        }
+    }
 
     private fun displaySelectedOutfit(outfit: RecyclerItem) {
         // Update the UI to display the selected outfit details or image
@@ -195,8 +243,8 @@ class SelectOutfitActivity : AppCompatActivity() {
 //    }
 
 
-        fun onItemClick(position: RecyclerItem) {
-            // Handle item click here
-            Toast.makeText(this, "Clicked on: ${position.heading}", Toast.LENGTH_SHORT).show()
-        }
+    fun onItemClick(position: RecyclerItem) {
+        // Handle item click here
+        Toast.makeText(this, "Clicked on: ${position.heading}", Toast.LENGTH_SHORT).show()
     }
+}
