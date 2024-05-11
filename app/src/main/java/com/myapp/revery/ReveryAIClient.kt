@@ -500,62 +500,43 @@ class ReveryAIClient {
     }
 
 
-//    private fun getGarmentFromTryOnResponse(responseBody: JsonObject): Garment? {
-//        println("Parsing try-on response...")
-//        try {
-//            val modelMetadata = responseBody.getAsJsonObject("model_metadata")
-//            val modelFile = modelMetadata.get("model_file").asString
-//
-//            // Extract gender from model_file
-//            val gender = modelFile.substringBefore(";")
-//
-//            println("Gender extracted from model_file: $gender")
-//            println("Model file: $modelFile")
-//
-//            // Assuming garments are not returned in the response, but you need to construct a Garment object
-//            // based on the model metadata
-//            return Garment(
-//                gender,
-//                modelFile, // Use model_file as the garment ID
-//                ImageUrls("Hey"), // Assuming no image URL is provided in the response
-//                TryOn(
-//                    "whay", // Assuming no bottoms sub-category is provided in the response
-//                    "are", // Assuming no category is provided in the response
-//                    false, // Assuming open outerwear is always false
-//                    false // Assuming enabled is always false
-//                )
-//            )
-//        } catch (e: Exception) {
-//            println("Error while parsing try-on response: ${e.message}")
-//        }
-//        return null
-//    }
-
+    // This function takes a JsonObject called responseBody and parses it to extract model metadata
     private fun parseModelMetadata(responseBody: JsonObject): ModelMetadata {
         try {
+            // Extract the "model_metadata" object from the responseBody
             val modelMetadataJson = responseBody.getAsJsonObject("model_metadata")
+
+            // Extract the "gender" field from modelMetadataJson, if it exists and is not null
             val gender = if (modelMetadataJson.has("gender") && !modelMetadataJson.get("gender").isJsonNull)
                 modelMetadataJson.get("gender").asString
             else
-                ""
+                "" // If the field doesn't exist or is null, set gender to an empty string
+
+            // Extract the "model_file" field from modelMetadataJson, if it exists and is not null
             val modelFile = if (modelMetadataJson.has("model_file") && !modelMetadataJson.get("model_file").isJsonNull)
                 modelMetadataJson.get("model_file").asString
             else
                 ""
+
+            // Extract the "model_id" field from modelMetadataJson, if it exists and is not null
             val modelId = if (modelMetadataJson.has("model_id") && !modelMetadataJson.get("model_id").isJsonNull)
                 modelMetadataJson.get("model_id").asString
             else
                 ""
+
+            // Extract the "shoes_id" field from modelMetadataJson, if it exists and is not null
             val shoesId = if (modelMetadataJson.has("shoes_id") && !modelMetadataJson.get("shoes_id").isJsonNull)
                 modelMetadataJson.get("shoes_id").asString
             else
                 null
 
+            // Return a ModelMetadata object with the extracted values and a default layering value of "free_layering"
             return ModelMetadata(gender, modelFile, modelId, shoesId, "free_layering")
         } catch (e: Exception) {
+            // If an exception occurs during parsing, print an error message
             println(TAG + "Unexpected error parsing model metadata: ${e.message}")
         }
-        // Return default values or handle errors appropriately
+        // If parsing fails for any reason, return a ModelMetadata object with default values
         return ModelMetadata()
     }
 
