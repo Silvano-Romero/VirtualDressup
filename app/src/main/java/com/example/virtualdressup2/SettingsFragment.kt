@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import com.example.virtualdressup2.R
 import com.example.virtualdressup2.SignInActivity
 import com.google.firebase.auth.FirebaseAuth
+import android.widget.Switch
 
 const val THEME_PREFERENCE_KEY = "selected_theme"
 
@@ -23,12 +24,16 @@ class SettingsFragment : Fragment() {
     private lateinit var darkModeSwitch: Switch
     private lateinit var themeSpinner: Spinner
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var optInNotificationSwitch: Switch
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_settings, container, false)
+
+        optInNotificationSwitch = view.findViewById(R.id.optInNotificationSwitch)
+
         firebaseAuth = FirebaseAuth.getInstance()
 
         mTvEmail = view.findViewById(R.id.emailEt)

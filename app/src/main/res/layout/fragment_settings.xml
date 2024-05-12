@@ -95,5 +95,17 @@
         android:textSize="20sp"
         android:textColor="@color/black" />
 
+    <Switch
+        android:id="@+id/optInNotificationSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:checked="false"
+        android:text="Opt In to Notifications"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/themeSpinner" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
