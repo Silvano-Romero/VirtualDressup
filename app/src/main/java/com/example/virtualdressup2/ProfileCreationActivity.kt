@@ -3,8 +3,6 @@ package com.example.virtualdressup2
 import com.myapp.revery.ReveryAIClient
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -12,13 +10,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.virtualdressup2.databinding.ProfileCreationBinding
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.myapp.firebase.Avatar
 import com.myapp.firebase.revery.AvatarDAO
 import com.myapp.revery.ReveryAIConstants
-import com.myapp.users.Account
-import com.myapp.users.User
-import com.squareup.picasso.Picasso
 import kotlinx.coroutines.launch
 
 class ProfileCreationActivity : AppCompatActivity() {
@@ -32,7 +26,6 @@ class ProfileCreationActivity : AppCompatActivity() {
     private var isMale = false
     private var maleModelPosition = 0
     private var femaleModelPosition = 0
-    private var selectedModel = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,10 +80,10 @@ class ProfileCreationActivity : AppCompatActivity() {
 
             // Create an instance of GarmentTopsAdapter and pass in the garmentTopsList and item click listener
             maleModelAdapter = MaleModelAdapter(maleModelList) { _, position ->
-                if (selectedModel == "female") {
+                if (isMale == false) {
                     femaleModelAdapter.clearSelection()
                 }
-                selectedModel = "male"
+                isMale = true
                 maleModelPosition = position
                 // Display a toast message indicating the clicked outfit
                 Toast.makeText(
@@ -114,10 +107,10 @@ class ProfileCreationActivity : AppCompatActivity() {
 
             // Create an instance of GarmentTopsAdapter and pass in the garmentTopsList and item click listener
             femaleModelAdapter = FemaleModelAdapter(femaleModelList) { _, position ->
-                if (selectedModel == "male") {
+                if (isMale == true) {
                     maleModelAdapter.clearSelection()
                 }
-                selectedModel = "female"
+                isMale = false
                 femaleModelPosition = position
                 // Display a toast message indicating the clicked outfit
                 Toast.makeText(
