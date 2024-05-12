@@ -63,4 +63,24 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    // Espresso core library
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+
+    // Espresso contrib library (optional, but often useful)
+    androidTestImplementation("androidx.test.espresso:espresso-contrib:3.4.0")
+
+    // Espresso intents library for testing intents and inter-activity communication
+    androidTestImplementation("androidx.test.espresso:espresso-intents:3.4.0")
+
+    // Espresso accessibility library for testing accessibility features
+    androidTestImplementation ("androidx.test.espresso:espresso-accessibility:3.4.0")
+
+    // Espresso web library for testing web views
+    androidTestImplementation ("androidx.test.espresso:espresso-web:3.4.0")
+
+    // ActivityScenarioRule is part of androidx.test.ext:junit
+    androidTestImplementation ("androidx.test.ext:junit:1.1.3")
+
+    // UI Automator for testing interactions across app boundaries
+    androidTestImplementation ("androidx.test.uiautomator:uiautomator:2.2.0")
 }

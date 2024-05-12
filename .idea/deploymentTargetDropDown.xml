@@ -2,7 +2,19 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="GalleryActivityIntegrationTest">
+        <State />
+      </entry>
+      <entry key="GalleryActivityIntegrationTest (1)">
+        <State />
+      </entry>
+      <entry key="GalleryActivityIntegrationTest1">
+        <State />
+      </entry>
       <entry key="app">
+        <State />
+      </entry>
+      <entry key="shareButton_ShouldStartShareIntent()">
         <State />
       </entry>
     </value>
