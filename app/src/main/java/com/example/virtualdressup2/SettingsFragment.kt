@@ -13,6 +13,7 @@ import com.example.virtualdressup2.R
 import com.example.virtualdressup2.SignInActivity
 import com.google.firebase.auth.FirebaseAuth
 import android.widget.Switch
+import com.example.virtualdressup2.ProfileSelectionActivity
 
 const val THEME_PREFERENCE_KEY = "selected_theme"
 
@@ -25,6 +26,7 @@ class SettingsFragment : Fragment() {
     private lateinit var themeSpinner: Spinner
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var optInNotificationSwitch: Switch
+    private lateinit var backToProfileButton: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -80,6 +82,15 @@ class SettingsFragment : Fragment() {
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 // Do nothing
             }
+        }
+
+        backToProfileButton = view.findViewById(R.id.backToProfileButton)
+
+        // Add click listener to the button
+        backToProfileButton.setOnClickListener {
+            // Navigate back to ProfileSelectionActivity
+            val intent = Intent(requireContext(), ProfileSelectionActivity::class.java)
+            startActivity(intent)
         }
 
         val selectedTheme = sharedPreferences.getString(THEME_PREFERENCE_KEY, "Default") ?: "Default"
