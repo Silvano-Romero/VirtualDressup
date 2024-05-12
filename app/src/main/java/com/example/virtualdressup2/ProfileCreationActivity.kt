@@ -23,10 +23,8 @@ import kotlinx.coroutines.launch
 
 class ProfileCreationActivity : AppCompatActivity() {
 
-    private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var firstNameInput: EditText
     private lateinit var binding: ProfileCreationBinding
-    private lateinit var account: Account
     private val profileID = FirebaseAuth.getInstance().currentUser?.uid as String
     private lateinit var avatar: Avatar
     private lateinit var maleModelAdapter: MaleModelAdapter
@@ -34,8 +32,7 @@ class ProfileCreationActivity : AppCompatActivity() {
     private var isMale = false
     private var maleModelPosition = 0
     private var femaleModelPosition = 0
-    private lateinit var model: RecyclerItem
-    private var avatarID = "87463ae7-5ced"
+    private var selectedModel = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,14 +50,8 @@ class ProfileCreationActivity : AppCompatActivity() {
             val avatar: Avatar =
                 AvatarDAO().getSpecificAvatarFromProfile(profileID, avatarID)
 
-            // Handle the avatar object as needed
-//            val avatarOutfits = avatar.outfits
-//            val avatarModels = avatar.gender
             val fetchMaleModel = ReveryAIClient().getModels(gender = ReveryAIConstants.MALE)
             val fetchFemaleModel = ReveryAIClient().getModels(gender = ReveryAIConstants.FEMALE)
-
-//            println("fetchMaleModel.model_ids: ${fetchMaleModel.model_ids}")
-//            println("fetchFemaleModel.model_ids: ${fetchFemaleModel.model_ids}")
 
             for (modelId in fetchMaleModel.model_ids) {
                 val tryOnImgURL = "https://media.revery.ai/revery_client_models/$modelId/ou_aligned_transparent.png"
@@ -96,8 +87,11 @@ class ProfileCreationActivity : AppCompatActivity() {
 
             // Create an instance of GarmentTopsAdapter and pass in the garmentTopsList and item click listener
             maleModelAdapter = MaleModelAdapter(maleModelList) { _, position ->
+                if (selectedModel == "female") {
+                    femaleModelAdapter.clearSelection()
+                }
+                selectedModel = "male"
                 maleModelPosition = position
-                isMale = true
                 // Display a toast message indicating the clicked outfit
                 Toast.makeText(
                     this@ProfileCreationActivity,
@@ -120,7 +114,10 @@ class ProfileCreationActivity : AppCompatActivity() {
 
             // Create an instance of GarmentTopsAdapter and pass in the garmentTopsList and item click listener
             femaleModelAdapter = FemaleModelAdapter(femaleModelList) { _, position ->
-                isMale = false
+                if (selectedModel == "male") {
+                    maleModelAdapter.clearSelection()
+                }
+                selectedModel = "female"
                 femaleModelPosition = position
                 // Display a toast message indicating the clicked outfit
                 Toast.makeText(
@@ -166,9 +163,6 @@ class ProfileCreationActivity : AppCompatActivity() {
                 // Create Intent to start ProfileSelectionActivity
                 val intent =
                     Intent(this@ProfileCreationActivity, ProfileSelectionActivity::class.java)
-
-                // Put the created avatar as an extra
-                //intent.putExtra("Avatars", avatar)
 
                 // Start ProfileSelectionActivity
                 startActivity(intent)

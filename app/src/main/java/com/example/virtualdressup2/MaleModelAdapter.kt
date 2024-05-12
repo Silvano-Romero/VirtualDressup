@@ -14,6 +14,7 @@ class MaleModelAdapter(
     private val onItemClick: (RecyclerItem, position: Int) -> Unit // Callback function for item click events
 ) : RecyclerView.Adapter<MaleModelAdapter.MaleModelViewHolder>() {
 
+    var selectedModel: String? = null
     var selectedPosition = RecyclerView.NO_POSITION // Track the currently selected position
 
     // Create a new view holder when needed
@@ -50,6 +51,11 @@ class MaleModelAdapter(
 
     fun deleteItem(i : Int){
         maleModelList.removeAt(i)
+        notifyDataSetChanged()
+    }
+
+    fun clearSelection() {
+        selectedPosition = -1
         notifyDataSetChanged()
     }
 

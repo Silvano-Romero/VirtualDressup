@@ -15,6 +15,7 @@ class FemaleModelAdapter(
 ) : RecyclerView.Adapter<FemaleModelAdapter.FemaleModelViewHolder>() {
 
     var selectedPosition = RecyclerView.NO_POSITION // Track the currently selected position
+    var selectedModel: String? = null
 
     // Create a new view holder when needed
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FemaleModelViewHolder {
@@ -51,6 +52,12 @@ class FemaleModelAdapter(
         femaleModelList.removeAt(i)
         notifyDataSetChanged()
     }
+
+    fun clearSelection() {
+        selectedPosition = -1
+        notifyDataSetChanged()
+    }
+
 
     // Inner class representing the view holder for each item
     inner class FemaleModelViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
