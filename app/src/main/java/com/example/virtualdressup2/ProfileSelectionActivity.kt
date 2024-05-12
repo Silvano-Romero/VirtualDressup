@@ -30,7 +30,13 @@ class ProfileSelectionActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             val avatarDAO = AvatarDAO()
-            avatarList.addAll(avatarDAO.getAvatarsFromProfile(profileID))
+            for( avatar in avatarDAO.getAvatarsFromProfile(profileID)){
+                //println("AVATAR_ID_PROF: ${avatar.avatarID} ${avatar.avatarID != "DefaultAvatar"}")
+                if (avatar.avatarID != "DefaultAvatar"){
+                    avatarList.add(avatar)
+                }
+            }
+//            avatarList.addAll(avatarDAO.getAvatarsFromProfile(profileID))
             avatarAdapter.notifyDataSetChanged()
 
         }
