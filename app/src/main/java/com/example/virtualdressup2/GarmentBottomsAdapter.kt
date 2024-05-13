@@ -1,5 +1,6 @@
 package com.example.virtualdressup2
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +27,12 @@ class GarmentBottomsAdapter(
         val currentItem = garmentBottomsList[position]
         holder.bindWithImageURL(currentItem)
         holder.itemView.isSelected = position == selectedPosition // Highlight the selected item
+        // Set background color based on the selected position
+        if (selectedPosition == holder.adapterPosition) {
+            holder.itemView.setBackgroundColor(Color.GRAY)
+        } else {
+            holder.itemView.setBackgroundColor(Color.TRANSPARENT)
+        }
     }
 
     // Return the total number of items in the list

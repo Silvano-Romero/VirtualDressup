@@ -1,27 +1,15 @@
 package com.example.virtualdressup2
 
 // SelectOutfitActivity.kt
-
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils.replace
-import android.util.Log
 import android.view.View
-import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.virtualdressup2.OutfitAdapter
-import com.example.virtualdressup2.databinding.ActivityGalleryBinding
 import com.example.virtualdressup2.databinding.SelectOutfitBinding
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.myapp.firebase.Avatar
 import com.myapp.firebase.Outfit
@@ -36,14 +24,8 @@ import kotlinx.coroutines.launch
 
 class SelectOutfitActivity : AppCompatActivity() {
 
-    //    private lateinit var reveryAIClient: ReveryAIClient
-//    private lateinit var recyclerView: RecyclerView
-//    private lateinit var newOutfitAdapter: NewOutfitAdapter
-//    private var mostRecentPosition: Int = 0
     private lateinit var binding: SelectOutfitBinding
     private lateinit var model: RecyclerItem
-    //    private lateinit var tops: RecyclerItem
-//    private lateinit var bottoms: RecyclerItem
     private lateinit var topsAdapter: GarmentTopsAdapter
     private lateinit var bottomsAdapter: GarmentBottomsAdapter
     private var topGarmentPosition = 0
@@ -53,9 +35,6 @@ class SelectOutfitActivity : AppCompatActivity() {
     private var tryOnResponse: TryOnResponse? = null
     private var avatar: Avatar = Avatar()
     private var outfit: Outfit = Outfit()
-
-//    private val outfitList = mutableListOf<RecyclerItem>()
-
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -141,9 +120,6 @@ class SelectOutfitActivity : AppCompatActivity() {
 
         }
 
-        // Fetch and display initial outfit
-        // fetchAndDisplayOutfit()
-
         // Set click listener for the back button
         binding.backButton.setOnClickListener {
             val intent = Intent(this@SelectOutfitActivity, MainActivity::class.java)
@@ -189,9 +165,6 @@ class SelectOutfitActivity : AppCompatActivity() {
                 displaySelectedOutfit(model)
             }
         }
-
-        // Display TryOnFragment
-//        supportFragmentManager.beginTransaction().replace(R.id.tryOnFragmentContainer, TryOnFragment()).commit()
     }
 
     private fun displaySelectedOutfit(outfit: RecyclerItem) {
@@ -205,43 +178,6 @@ class SelectOutfitActivity : AppCompatActivity() {
         // Set view to urlImage
         Picasso.get().load(outfit.modelID).into(binding.modelImageView)
     }
-
-
-//        fun fetchAndDisplayOutfit() {
-//            // Make API call to get filtered garments (outfits)
-//            GlobalScope.launch(Dispatchers.Main) {
-//                val filteredGarmentsResponse = reveryAIClient.getFilteredGarments()
-//                if (filteredGarmentsResponse.success) {
-//                    // Update the RecyclerView with the fetched outfits
-//                    outfitAdapter.setItems(filteredGarmentsResponse.garments)
-//                } else {
-//                    // Handle API call failure
-//                }
-//            }
-//        }
-
-//    fun saveSelectedOutfit() {
-//        val selectedPosition = mostRecentPosition
-//        // Get the selected outfit from the adapter
-//        val selectedOutfit = outfitAdapter.getItemAtPosition(mostRecentPosition)
-//
-//        // Check if an outfit is selected
-//        if (selectedOutfit != null) {
-//            // Save the selected outfit to the database
-//            GlobalScope.launch(Dispatchers.IO) {
-//                val userDAO = UserDAO()
-//                userDAO.writeDocumentToCollection("outfits", selectedOutfit.heading, selectedOutfit)
-//                // Display success message
-//                runOnUiThread {
-//                    Toast.makeText(this@SelectOutfitActivity, "Outfit Saved", Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//        } else {
-//            // Show an error message or handle the case where no outfit is selected
-//            Toast.makeText(this@SelectOutfitActivity, "Please select an outfit", Toast.LENGTH_SHORT).show()
-//        }
-//    }
-
 
     fun onItemClick(position: RecyclerItem) {
         // Handle item click here
