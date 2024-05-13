@@ -2,19 +2,22 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="GalleryActivityIntegrationTest">
+      <entry key="AvatarSelection">
         <State />
       </entry>
-      <entry key="GalleryActivityIntegrationTest (1)">
+      <entry key="NotificationSystem">
         <State />
       </entry>
-      <entry key="GalleryActivityIntegrationTest1">
+      <entry key="OutfitSelection">
+        <State />
+      </entry>
+      <entry key="SignUp">
+        <State />
+      </entry>
+      <entry key="SocialMediaConnection">
         <State />
       </entry>
       <entry key="app">
-        <State />
-      </entry>
-      <entry key="shareButton_ShouldStartShareIntent()">
         <State />
       </entry>
     </value>

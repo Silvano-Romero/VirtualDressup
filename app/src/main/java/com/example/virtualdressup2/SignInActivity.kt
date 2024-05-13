@@ -182,8 +182,10 @@ class SignInActivity : AppCompatActivity() {
         // Setting click listener for the login button
         binding.loginButton.setOnClickListener {
             // Retrieving email and password from input fields
-            val email = binding.usernameInput.text.toString()
-            val pass = binding.passwordInput.text.toString()
+            //val email = binding.usernameInput.text.toString()
+            //val pass = binding.passwordInput.text.toString()
+            val email = "sync@gmail.com"
+            val pass = "password"
 
             // Checking if email and password are not empty
             if (email.isNotEmpty() && pass.isNotEmpty()) {
