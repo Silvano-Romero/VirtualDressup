@@ -68,12 +68,15 @@ class CalendarActivity : AppCompatActivity(), CalendarDialogFragment.OnOutfitSel
             selectedDate?.let { date ->
                 // Query the "calendar" collection to check if the selected date exists
                 firestore.collection("calendar")
-                    .document(date)
+                    .document(profileID) // Use profileID as the document ID
+                    .collection(date) // Use date as the subcollection
+                    .document("outfit") // Use "outfit" as the document to store the outfit data
                     .get()
                     .addOnSuccessListener { documentSnapshot ->
                         if (documentSnapshot.exists()) {
-                            // Date exists, fetch outfit details and initialize selectedOutfit
-                            fetchOutfitForDate(date)
+                            // Date exists, delete outfit
+                            deleteOutfitDate(profileID, date)
+                            clearOutfitImage()
                         } else {
                             Toast.makeText(
                                 this,
@@ -114,7 +117,7 @@ class CalendarActivity : AppCompatActivity(), CalendarDialogFragment.OnOutfitSel
                     // Call the removeItem function of the adapter to delete the outfit
                     outfitAdapter.removeItem(selectedOutfit)
                     // Delete the outfit document from Firestore
-                    deleteOutfitDate(date)
+                    deleteOutfitDate(profileID, date)
                     // Optionally, perform any additional actions after deletion
                     // For example, hide the outfitImageView if needed
                     binding.outfitImageView.visibility = View.GONE
@@ -203,9 +206,29 @@ class CalendarActivity : AppCompatActivity(), CalendarDialogFragment.OnOutfitSel
     }
 
 
-    private fun deleteOutfitDate(date: String) {
-        // Get the document reference for the specified date
-        val documentReference = firestore.collection("calendar").document(date)
+//    private fun deleteOutfitDate(date: String) {
+//        // Get the document reference for the specified date
+//        val documentReference = firestore.collection("calendar").document(date)
+//
+//        // Delete the document from Firestore
+//        documentReference.delete()
+//            .addOnSuccessListener {
+//                // Document successfully deleted
+//                Toast.makeText(this, "Outfit for $date deleted successfully", Toast.LENGTH_SHORT).show()
+//            }
+//            .addOnFailureListener { e ->
+//                // Failed to delete the document
+//                Toast.makeText(this, "Failed to delete outfit for $date: $e", Toast.LENGTH_SHORT).show()
+//                Log.e("Firestore", "Error deleting outfit for $date", e)
+//            }
+//    }
+
+    private fun deleteOutfitDate(profileID: String, date: String) {
+        // Get the document reference for the specified date and profileID
+        val documentReference = firestore.collection("calendar")
+            .document(profileID) // Use profileID as the document ID
+            .collection(date) // Use date as the subcollection
+            .document("outfit") // Use "outfit" as the document to store the outfit data
 
         // Delete the document from Firestore
         documentReference.delete()
